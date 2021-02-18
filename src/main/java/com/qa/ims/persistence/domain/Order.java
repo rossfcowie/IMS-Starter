@@ -29,6 +29,14 @@ public class Order {
 		this.itemIDs = itemIDs;
 	}
 	
+	public Order(Long id, Long customerID, Long itemID) {
+		super();
+		this.id = id;
+		this.customerID = customerID;
+		this.itemIDs = new ArrayList<>();
+		this.itemIDs.add(itemID);
+	}
+
 	public Long getId() {
 		return id;
 	}
