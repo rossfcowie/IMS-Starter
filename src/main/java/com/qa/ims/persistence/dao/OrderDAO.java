@@ -38,7 +38,7 @@ public class OrderDAO implements Dao<Order>{
 	public Order readLatest() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders group by id ORDER BY id DESC LIMIT 1");) {
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders ORDER BY id DESC LIMIT 1");) {
 			resultSet.next();
 			return modelFromResultSet(resultSet);
 		} catch (Exception e) {
@@ -50,7 +50,7 @@ public class OrderDAO implements Dao<Order>{
 	@Override
 	public Order read(Long id) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM orders WHERE id = ? group by id");) {
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM orders WHERE id = ?");) {
 			statement.setLong(1, id);
 			try (ResultSet resultSet = statement.executeQuery();) {
 				resultSet.next();
@@ -65,7 +65,17 @@ public class OrderDAO implements Dao<Order>{
 
 	@Override
 	public Order create(Order t) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO orders(id, CustomerID) VALUES (?, ?)");) {
+			statement.setLong(1, t.getId());
+			statement.setLong(2, t.getCustomerID());
+			statement.executeUpdate();
+			return readLatest();
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
@@ -86,9 +96,9 @@ public class OrderDAO implements Dao<Order>{
 
 		Long id = resultSet.getLong("id");
 		Long customerID = resultSet.getLong("CustomerID");
-		Order finished = new Order(id, customerID);
+		Order finished = new Order(id,customerID);
 		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM orders WHERE id = ?");) {
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM orderItems WHERE OrderID = ?");) {
 			statement.setLong(1, id);
 			try (ResultSet rs = statement.executeQuery();) {
 				while(rs.next()) {

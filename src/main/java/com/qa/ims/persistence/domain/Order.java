@@ -22,6 +22,12 @@ public class Order {
 		this.itemIDs = new ArrayList<>();
 	}
 	
+	public Order(Long customerID) {
+		super();
+		this.customerID = customerID;
+		this.itemIDs = new ArrayList<>();
+	}
+	
 	public Order(Long id, Long customerID, List<Long> itemIDs) {
 		super();
 		this.id = id;

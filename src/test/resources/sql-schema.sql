@@ -8,7 +8,11 @@ CREATE TABLE IF NOT EXISTS `customers` (
     PRIMARY KEY (`id`)
 );
 CREATE TABLE IF NOT EXISTS `orders` (
-   `id` INT(11) NOT NULL,
+   `id` INT(11) NOT NULL AUTO_INCREMENT,
    `CustomerID` INT(11) NOT NULL,
-   `ItemID` INT(11)
+    PRIMARY KEY (`id`)
+);
+Create table if not exists `orderItems`(
+   `ItemID` INT(11) NOT NULL,
+   `OrderID` INT(11) NOT NULL
 );
