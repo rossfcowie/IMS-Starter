@@ -1,5 +1,3 @@
-drop schema ims;
-
 CREATE SCHEMA IF NOT EXISTS `ims`;
 
 USE `ims` ;
@@ -15,4 +13,9 @@ CREATE TABLE IF NOT EXISTS `ims`.`items` (
     `name` VARCHAR(40) not NULL,
     `value` float not NULL,
     PRIMARY KEY (`id`)
+);
+CREATE TABLE IF NOT EXISTS `ims`.`orders` (
+    `id` INT(11) NOT NULL,
+    `CustomerID` int(11) not NULL,
+    `ItemID` int(11)
 );

@@ -22,11 +22,14 @@ public class ItemDAO implements Dao<Item> {
 	public Item modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long id = resultSet.getLong("id");
 		String name = resultSet.getString("name");
-		Float value = resultSet.getFloat("value");
+		Double value = resultSet.getDouble("value");
 		return new Item(id,name,value);
 	}
 
-	
+	/**
+	 * Reads all entries in the items table, displays them in the logger
+	 * and returns them as a List of items.
+	 */
 	@Override
 	public List<Item> readAll() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
@@ -46,13 +49,47 @@ public class ItemDAO implements Dao<Item> {
 
 	@Override
 	public Item read(Long id) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM items where id =" + id);) {
+			Item item = null;
+			resultSet.next();
+			item=modelFromResultSet(resultSet);
+			return item;
+		} catch (SQLException e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
 	@Override
 	public Item create(Item t) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO items(name, value) VALUES (?,?)");) {
+				statement.setString(1, t.getName());
+				statement.setDouble(2, t.getValue());
+				statement.executeUpdate();
+				return readLatest();
+		}catch (SQLException e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+
+	private Item readLatest() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM items ORDER BY id DESC LIMIT 1");) {
+			Item item = null;
+			resultSet.next();
+			item=modelFromResultSet(resultSet);
+			return item;
+		} catch (SQLException e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
