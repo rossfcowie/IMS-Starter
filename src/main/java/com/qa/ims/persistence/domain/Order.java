@@ -1,19 +1,32 @@
 package com.qa.ims.persistence.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
 
 	private Long id;
 	private Long customerID;
-	private List<Long> itemID;
+	private List<Long> itemIDs;
 	
 	
-	public Order(Long id, Long customerID, List<Long> itemID) {
+	@Override
+	public String toString() {
+		return "id=" + id + ", customerID=" + customerID + ", itemIDs=" + itemIDs;
+	}
+
+	public Order(Long id,Long customerID) {
 		super();
 		this.id = id;
 		this.customerID = customerID;
-		this.itemID = itemID;
+		this.itemIDs = new ArrayList<>();
+	}
+	
+	public Order(Long id, Long customerID, List<Long> itemIDs) {
+		super();
+		this.id = id;
+		this.customerID = customerID;
+		this.itemIDs = itemIDs;
 	}
 	
 	public Long getId() {
@@ -22,8 +35,8 @@ public class Order {
 	public Long getCustomerID() {
 		return customerID;
 	}
-	public List<Long> getItemID() {
-		return itemID;
+	public List<Long> getItemIDs() {
+		return itemIDs;
 	}
 	public void setId(Long id) {
 		this.id = id;
@@ -31,8 +44,11 @@ public class Order {
 	public void setCustomerID(Long customerID) {
 		this.customerID = customerID;
 	}
-	public void setItemID(List<Long> itemID) {
-		this.itemID = itemID;
+	public void setItemIDs(List<Long> itemIDs) {
+		this.itemIDs = itemIDs;
+	}
+	public void addItemID(Long itemID) {
+		this.itemIDs.add(itemID);
 	}
 
 	@Override
@@ -41,7 +57,7 @@ public class Order {
 		int result = 1;
 		result = prime * result + ((customerID == null) ? 0 : customerID.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((itemID == null) ? 0 : itemID.hashCode());
+		result = prime * result + ((itemIDs == null) ? 0 : itemIDs.hashCode());
 		return result;
 	}
 
@@ -64,10 +80,10 @@ public class Order {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (itemID == null) {
-			if (other.itemID != null)
+		if (itemIDs == null) {
+			if (other.itemIDs != null)
 				return false;
-		} else if (!itemID.equals(other.itemID))
+		} else if (!itemIDs.equals(other.itemIDs))
 			return false;
 		return true;
 	}
