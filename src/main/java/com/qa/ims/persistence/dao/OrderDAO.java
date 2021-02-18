@@ -62,7 +62,7 @@ public class OrderDAO implements Dao<Order>{
 		}
 		return null;
 	}
-
+	
 	@Override
 	public Order create(Order t) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
@@ -101,7 +101,6 @@ public class OrderDAO implements Dao<Order>{
 			statement.setLong(1, id);
 			try (ResultSet rs = statement.executeQuery();) {
 				while(rs.next()) {
-					LOGGER.info(rs.getLong("ItemID"));
 					finished.addItemID(rs.getLong("ItemID"));
 				}
 			}
