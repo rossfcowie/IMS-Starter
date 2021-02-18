@@ -37,5 +37,14 @@ public class ItemDAOTest {
 	public void testReadLatest() {
 		assertEquals(new Item(1L, "Carrot", 1.25), itemDAO.readLatest());
 	}
+	@Test
+	public void testRead() {
+		assertEquals(new Item(1L, "Carrot", 1.25), itemDAO.read(1L));
+	}
+	@Test
+	public void testUpdate() {
+		final Item updated = new Item(1L, "Asparagus", 1.55);
+		assertEquals(updated, itemDAO.update(updated));
+	}
 	
 }

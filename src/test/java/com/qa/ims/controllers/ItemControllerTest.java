@@ -30,8 +30,8 @@ public class ItemControllerTest {
 	
 	@Test
 	public void testCreate() {
-		final String NAME = "Carrot";
-		final Double VALUE = 1.25;
+		final String NAME = "Apple";
+		final Double VALUE = 1.0;
 		final Item created = new Item(NAME, VALUE);
 
 		Mockito.when(utils.getString()).thenReturn(NAME);
@@ -55,5 +55,25 @@ public class ItemControllerTest {
 		assertEquals(items, itemController.readAll());
 
 		Mockito.verify(itemDAO, Mockito.times(1)).readAll();
+	}
+	
+	@Test
+	public void testUpdate() {
+		final String NAME = "Apple";
+		final Double VALUE = 1.0;
+		final Long ID = 1L;
+		final Item updated = new Item(ID,NAME, VALUE);
+
+		Mockito.when(utils.getString()).thenReturn(NAME);
+		Mockito.when(utils.getDouble()).thenReturn(VALUE);
+		Mockito.when(utils.getLong()).thenReturn(ID);
+		Mockito.when(itemDAO.update(updated)).thenReturn(updated);
+
+		assertEquals(updated, itemController.update());
+
+		Mockito.verify(utils, Mockito.times(1)).getString();
+		Mockito.verify(utils, Mockito.times(1)).getDouble();
+		Mockito.verify(utils, Mockito.times(1)).getLong();
+		Mockito.verify(itemDAO, Mockito.times(1)).update(updated);
 	}
 }

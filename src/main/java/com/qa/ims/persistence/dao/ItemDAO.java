@@ -95,7 +95,17 @@ public class ItemDAO implements Dao<Item> {
 
 	@Override
 	public Item update(Item t) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("UPDATE items Set name=?, value=? where id = ?");) {
+				statement.setString(1, t.getName());
+				statement.setDouble(2, t.getValue());
+				statement.setDouble(3, t.getId());
+				statement.executeUpdate();
+				return read(t.getId());
+		} catch (SQLException e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
