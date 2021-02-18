@@ -46,5 +46,10 @@ public class ItemDAOTest {
 		final Item updated = new Item(1L, "Asparagus", 1.55);
 		assertEquals(updated, itemDAO.update(updated));
 	}
+	@Test
+	public void testDelete() {
+		assertEquals(1, itemDAO.delete(1));
+	}
+	
 	
 }
