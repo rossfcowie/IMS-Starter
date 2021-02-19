@@ -78,6 +78,7 @@ public class OrderDAO implements Dao<Order>{
 		return null;
 	}
 
+	//Add item to order
 	@Override
 	public Order update(Order t) {
 		LOGGER.info(t);
@@ -94,7 +95,7 @@ public class OrderDAO implements Dao<Order>{
 		}
 		return null;
 	}
-	
+	//Delete item from order
 	public Order update(Long oid,List<Long> itemIDs) {
 		LOGGER.info("" + oid + "," + itemIDs + "");
 		try (Connection connection = DBUtils.getInstance().getConnection();

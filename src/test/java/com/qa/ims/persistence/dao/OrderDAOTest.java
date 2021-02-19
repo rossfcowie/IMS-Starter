@@ -42,9 +42,25 @@ public class OrderDAOTest {
 	@Test
 	public void testRead() {
 		final long ID = 1L;
-		assertEquals(new Order(1L, 1L, 1L), DAO.read(ID));
+		assertEquals(new Order(ID, 1L, 1L), DAO.read(ID));
 	}
-	
-	
+	@Test
+	public void testUpdateAdd() {
+		final long ID = 1L,IID =2L;
+		List<Long> IIDS = new ArrayList<>();
+		IIDS.add(IID);
+		final Order added = new Order(ID,IIDS);
+		IIDS.add(1L);
+		
+		assertEquals(new Order(ID, 1L, IIDS), DAO.update(added));
+	}
+	@Test
+	public void testUpdateDelete() {
+		final long ID = 1L,IID =1L;
+		List<Long> IIDS = new ArrayList<>();
+		IIDS.add(IID);
+		List<Long> IIDS2 = new ArrayList<>();
+		assertEquals(new Order(ID, 1L, IIDS2), DAO.update(ID,IIDS));
+	}
 	
 }

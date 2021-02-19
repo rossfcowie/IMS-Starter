@@ -102,8 +102,11 @@ public class Order {
 		if (itemIDs == null) {
 			if (other.itemIDs != null)
 				return false;
-		} else if (!itemIDs.equals(other.itemIDs))
-			return false;
+		} else if(other.itemIDs != null){
+			if (!itemIDs.containsAll(other.itemIDs)) {
+				return false;
+			}
+		}
 		return true;
 	}
 	
