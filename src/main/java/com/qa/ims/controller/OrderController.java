@@ -27,7 +27,7 @@ public class OrderController implements CrudController<Order> {
 	public List<Order> readAll() {
 		List<Order> orders = orderDAO.readAll();
 		for (Order order : orders) {
-			LOGGER.info(order);
+			LOGGER.info(order + ", cost =" + orderDAO.getOrderCost(order.getId()));
 		}
 		return orders;
 	}
@@ -69,6 +69,11 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("Delete which order?");
 		Long orderID = utils.getLong();
 		return orderDAO.delete(orderID);
+	}
+	public Double cost() {
+		LOGGER.info("Calculate cost for which order?");
+		Long orderID = utils.getLong();
+		return orderDAO.getOrderCost(orderID);
 	}
 
 }

@@ -81,7 +81,6 @@ public class OrderDAO implements Dao<Order>{
 	//Add item to order
 	@Override
 	public Order update(Order t) {
-		LOGGER.info(t);
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("INSERT INTO orderitems(ItemID,OrderID) VALUES (?,?)");) {
@@ -97,7 +96,6 @@ public class OrderDAO implements Dao<Order>{
 	}
 	//Delete item from order
 	public Order update(Long oid,List<Long> itemIDs) {
-		LOGGER.info("" + oid + "," + itemIDs + "");
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM orderitems WHERE OrderID = ? and ItemID = ?");) {
 			statement.setLong(1, oid);
@@ -145,5 +143,20 @@ public class OrderDAO implements Dao<Order>{
 		}
 		return finished;
 	}
-
+	public Double getOrderCost(Long id) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("\r\n"
+						+ "SELECT sum(items.value) as total from orders JOIN orderItems on orders.id=orderitems.OrderID join items on orderitems.ItemID=items.id where orders.id = ?");) {
+			statement.setLong(1, id);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				resultSet.next();
+				return resultSet.getDouble(1);
+				
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return 0D;
+}
 }

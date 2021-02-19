@@ -15,7 +15,11 @@ CREATE TABLE IF NOT EXISTS `ims`.`items` (
     PRIMARY KEY (`id`)
 );
 CREATE TABLE IF NOT EXISTS `ims`.`orders` (
-    `id` INT(11) NOT NULL,
-    `CustomerID` int(11) not NULL,
-    `ItemID` int(11)
+   `id` INT(11) NOT NULL AUTO_INCREMENT,
+   `CustomerID` INT(11) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+Create table if not exists `ims`.`orderItems`(
+   `ItemID` INT(11) NOT NULL,
+   `OrderID` INT(11) NOT NULL
 );
