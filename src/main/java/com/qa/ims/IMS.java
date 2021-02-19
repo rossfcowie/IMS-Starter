@@ -6,9 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.qa.ims.controller.Action;
 import com.qa.ims.controller.CrudController;
 import com.qa.ims.controller.CustomerController;
-import com.qa.ims.controller.OrderController;
 import com.qa.ims.persistence.dao.CustomerDAO;
-import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.utils.DBUtils;
 import com.qa.ims.utils.Utils;
@@ -17,16 +15,13 @@ public class IMS {
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
-	private final OrderController orders;
 	private final CustomerController customers;
 	private final Utils utils;
 
 	public IMS() {
 		this.utils = new Utils();
 		final CustomerDAO custDAO = new CustomerDAO();
-		final OrderDAO orderDAO = new OrderDAO();
 		this.customers = new CustomerController(custDAO, utils);
-		this.orders = new OrderController(orderDAO, utils);
 	}
 
 	public void imsSystem() {
@@ -57,7 +52,6 @@ public class IMS {
 			case ITEM:
 				break;
 			case ORDER:
-				active = this.orders;
 				break;
 			case STOP:
 				return;
