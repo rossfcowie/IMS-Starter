@@ -80,9 +80,36 @@ public class OrderDAO implements Dao<Order>{
 
 	@Override
 	public Order update(Order t) {
-		// TODO Auto-generated method stub
+		LOGGER.info(t);
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO orderitems(ItemID,OrderID) VALUES (?,?)");) {
+			statement.setLong(1, t.getItemIDs().get(0));
+			statement.setLong(2, t.getId());
+			statement.executeUpdate();
+			return readLatest();
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
+	
+	public Order update(Long oid,List<Long> itemIDs) {
+		LOGGER.info("" + oid + "," + itemIDs + "");
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("DELETE FROM orderitems WHERE OrderID = ? and ItemID = ?");) {
+			statement.setLong(1, oid);
+			statement.setLong(2, itemIDs.get(0));
+			statement.executeUpdate();
+			return read(oid);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	
 
 	@Override
 	public int delete(long id) {
@@ -97,7 +124,7 @@ public class OrderDAO implements Dao<Order>{
 		Long customerID = resultSet.getLong("CustomerID");
 		Order finished = new Order(id,customerID);
 		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("SELECT * FROM orderItems WHERE OrderID = ?");) {
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM orderitems WHERE OrderID = ?");) {
 			statement.setLong(1, id);
 			try (ResultSet rs = statement.executeQuery();) {
 				while(rs.next()) {

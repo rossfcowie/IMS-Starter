@@ -34,6 +34,11 @@ public class Order {
 		this.customerID = customerID;
 		this.itemIDs = itemIDs;
 	}
+	public Order(Long id, List<Long> itemIDs) {
+		super();
+		this.id = id;
+		this.itemIDs = itemIDs;
+	}
 	
 	public Order(Long id, Long customerID, Long itemID) {
 		super();
