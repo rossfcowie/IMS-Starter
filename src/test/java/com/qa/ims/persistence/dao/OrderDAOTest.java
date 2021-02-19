@@ -2,6 +2,9 @@ package com.qa.ims.persistence.dao;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,4 +69,10 @@ public class OrderDAOTest {
 	public void testDelete() {
 		assertEquals(1, DAO.delete(1));
 	}
+	@Test
+	public void testOrderCost() {
+		Double cost = 1.25;
+		assertEquals(cost,DAO.getOrderCost(1L));
+		
+}
 }
