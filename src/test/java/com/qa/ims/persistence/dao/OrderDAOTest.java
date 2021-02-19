@@ -62,5 +62,8 @@ public class OrderDAOTest {
 		List<Long> IIDS2 = new ArrayList<>();
 		assertEquals(new Order(ID, 1L, IIDS2), DAO.update(ID,IIDS));
 	}
-	
+	@Test
+	public void testDelete() {
+		assertEquals(1, DAO.delete(1));
+	}
 }

@@ -54,7 +54,19 @@ public class OrderControllerTest {
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(dao, Mockito.times(1)).create(created);
 	}
+	
+	@Test
+	public void testDelete() {
+		final Long OID = 1L;
+		Mockito.when(utils.getLong()).thenReturn(OID);
+		Mockito.when(dao.delete(OID)).thenReturn(1);
 
+		assertEquals(1L, controller.delete());
+
+		Mockito.verify(utils, Mockito.times(1)).getLong();
+		Mockito.verify(dao, Mockito.times(1)).delete(OID);
+	}
+	
 	@Test
 	public void testUpdateAdd() {
 		final Long OID = 1L, IID=1L;
