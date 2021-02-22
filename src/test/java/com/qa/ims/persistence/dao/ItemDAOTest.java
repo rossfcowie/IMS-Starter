@@ -51,5 +51,37 @@ public class ItemDAOTest {
 		assertEquals(1, itemDAO.delete(1));
 	}
 	
-	
+	@Test
+	public void testCreateBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final Item created = new Item(2L, "Asparagus", 1.55);
+		assertEquals(null, itemDAO.create(created));
+	}
+	@Test
+	public void testReadAllBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		List<Item> expected = new ArrayList<>();
+		assertEquals(expected, itemDAO.readAll());
+	}
+	@Test
+	public void testReadLatestBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(null, itemDAO.readLatest());
+	}
+	@Test
+	public void testReadBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(null, itemDAO.read(1L));
+	}
+	@Test
+	public void testUpdateBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final Item updated = new Item(1L, "Asparagus", 1.55);
+		assertEquals(null, itemDAO.update(updated));
+	}
+	@Test
+	public void testDeleteBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(0, itemDAO.delete(1));
+	}
 }

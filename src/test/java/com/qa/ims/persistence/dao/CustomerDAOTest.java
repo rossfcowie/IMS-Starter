@@ -56,4 +56,38 @@ public class CustomerDAOTest {
 	public void testDelete() {
 		assertEquals(1, DAO.delete(1));
 	}
+	
+	@Test
+	public void testDeleteBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(0,DAO.delete(1));
+	}
+	@Test
+	public void testCreateBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final Customer created = new Customer(2L, "chris", "perrins");
+		assertEquals(null, DAO.create(created));
+	}
+	
+	@Test
+	public void testReadAllBadSQL() {
+		List<Customer> expected = new ArrayList<>();
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(expected, DAO.readAll());
+	}
+
+	@Test
+	public void testReadLatestBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(null, DAO.readLatest());
+	}
+
+	@Test
+	public void testReadBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(null, DAO.read(1L));
+	}
+	
+	
+	
 }
