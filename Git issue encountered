@@ -1,3 +1,0 @@
-at about 11:30 Friday 19th Feburary I started to try and git merge my itemfunctionality branch into develop, along with my OrderFunctionality branch, however git assumed 
-that the develop branch was already up to date despite not having any of the files needed for ItemFunctionality.  After attempting to sort this, and meeting little sucess 
-a new branch ItemFunctionalityGitFix was made with the files being added to that one and merged into develop.
