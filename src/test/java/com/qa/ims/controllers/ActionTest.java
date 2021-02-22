@@ -28,8 +28,9 @@ public class ActionTest {
 		Mockito.verify(utils, Mockito.times(1)).getString();
 	}
 	@Test
-	public void testgetDescription() {
+	public void testGetDescription() {
 		action = Action.CREATE;
 		assertEquals("CREATE: To save a new entity into the database" ,action.getDescription());
 	}
+
 }

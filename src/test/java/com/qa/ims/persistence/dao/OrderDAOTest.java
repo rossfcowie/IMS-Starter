@@ -75,4 +75,61 @@ public class OrderDAOTest {
 		assertEquals(cost,DAO.getOrderCost(1L));
 		
 }
+	
+	@Test
+	public void testCreateBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final Order created = new Order(2L, 2L);
+		assertEquals(null, DAO.create(created));
+	}
+	
+	@Test
+	public void testReadAllBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		List<Order> expected = new ArrayList<>();
+		assertEquals(expected, DAO.readAll());
+	}
+	
+	@Test
+	public void testReadLatestBadSQL() {
+		assertEquals(new Order(1L, 1L, 1L), DAO.readLatest());
+	}
+	
+	@Test
+	public void testReadBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final long ID = 1L;
+		assertEquals(null, DAO.read(ID));
+	}
+	@Test
+	public void testUpdateAddBadSQL() {
+
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final long ID = 1L,IID =2L;
+		List<Long> IIDS = new ArrayList<>();
+		IIDS.add(IID);
+		final Order added = new Order(ID,IIDS);
+		
+		assertEquals(null, DAO.update(added));
+	}
+	@Test
+	public void testUpdateDeleteBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final long ID = 1L,IID =1L;
+		List<Long> IIDS = new ArrayList<>();
+		IIDS.add(IID);
+		assertEquals(null, DAO.update(ID,IIDS));
+	}
+	@Test
+	public void testDeleteBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(0, DAO.delete(1));
+	}
+	@Test
+	public void testOrderCostBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		
+		Double cost = 0D;
+		assertEquals(cost,DAO.getOrderCost(1L));
+	}
 }
