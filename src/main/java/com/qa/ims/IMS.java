@@ -10,8 +10,10 @@ import com.qa.ims.controller.ItemController;
 import com.qa.ims.controller.OrderController;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.ItemDAO;
+import com.qa.ims.persistence.dao.LoginDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.domain.Domain;
+import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.DBUtils;
 import com.qa.ims.utils.Utils;
 
@@ -23,12 +25,14 @@ public class IMS {
 	private final ItemController items;
 	private final Utils utils;
 	private final OrderController orders;
+	private final LoginDAO login = new LoginDAO();
 
 	public IMS() {
 		this.utils = new Utils();
 		final CustomerDAO custDAO = new CustomerDAO();
 		final ItemDAO itemDAO = new ItemDAO();
 		final OrderDAO orderDAO = new OrderDAO();
+
 		this.customers = new CustomerController(custDAO, utils);
 		this.orders = new OrderController(orderDAO, utils);
 		this.items = new ItemController(itemDAO, utils);
@@ -37,17 +41,24 @@ public class IMS {
 	public void imsSystem() {
 		LOGGER.info("Welcome to the Inventory Management System!");
 		DBUtils.connect();
-
-		Domain domain = null;
+		User userLogin = null;
 		do {
+			LOGGER.info("Please enter your username.");
+			String username = utils.getString();
+			LOGGER.info("Please enter your password.");
+			String password = utils.getString();
+			userLogin = this.login.attemptLogin(username, password);
+		} while (null == userLogin);
+		Domain domain = null;
+		int permissionLevel = userLogin.getPermission();
+		do {
+			
 			LOGGER.info("Which entity would you like to use?");
-			Domain.printDomains();
-
-			domain = Domain.getDomain(utils);
-
+			Domain.printDomains(permissionLevel);
+			domain = Domain.getDomain(utils, permissionLevel);
 			domainAction(domain);
-
 		} while (domain != Domain.STOP);
+
 		tearDown();
 	}
 
@@ -72,7 +83,7 @@ public class IMS {
 				break;
 			}
 
-			LOGGER.info(() ->"What would you like to do with " + domain.name().toLowerCase() + ":");
+			LOGGER.info(() -> "What would you like to do with " + domain.name().toLowerCase() + ":");
 
 			Action.printActions();
 			Action action = Action.getAction(utils);
@@ -105,7 +116,7 @@ public class IMS {
 			break;
 		}
 	}
-	
+
 	private void tearDown() {
 		utils.tearDown();
 	}

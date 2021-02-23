@@ -25,9 +25,10 @@ Create table if not exists `ims`.`orderItems`(
 );
 Create table if not exists `ims`.`Users`(
  `id` INT(11) NOT NULL AUTO_INCREMENT,
- `Username` VARCHAR(40) DEFAULT NULL,
+ `Username` VARCHAR(40) Unique DEFAULT NULL,
  `Password` VARCHAR(40) DEFAULT NULL,
- `permissions` int default 0
+ `permissions` int default 0,
+    PRIMARY KEY (`id`)
 );
 Create table if not exists `ims`.`ItemEdits`(
 `EditorID` INT(11) not null,
@@ -44,3 +45,4 @@ Create table if not exists `ims`.`CustomerEdits`(
 `CustomerID` INT(11) not null,
 `ChangeType` char(6) default null
 );
+Insert into `Users`(`id`,`Username`,`Password`,`permissions`) values (1,"admin","admin",4);
