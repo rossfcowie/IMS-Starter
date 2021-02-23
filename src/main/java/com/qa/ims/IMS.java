@@ -48,6 +48,7 @@ public class IMS {
 			domainAction(domain);
 
 		} while (domain != Domain.STOP);
+		tearDown();
 	}
 
 	private void domainAction(Domain domain) {
@@ -104,5 +105,8 @@ public class IMS {
 			break;
 		}
 	}
-
+	
+	private void tearDown() {
+		utils.tearDown();
+	}
 }
