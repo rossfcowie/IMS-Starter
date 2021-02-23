@@ -12,7 +12,11 @@ public class Order {
 	
 	@Override
 	public String toString() {
-		return "id=" + id + ", customerID=" + customerID + ", itemIDs=" + itemIDs;
+		String str = "}==Order Id:" + id + "=={\ncustomer ID=" + customerID + "\n}=items={\n";
+		for(Long item:itemIDs) {
+			str += item+"\n";
+		}
+		return str + "}===={\n";
 	}
 
 	public Order(Long id,Long customerID) {
