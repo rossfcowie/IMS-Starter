@@ -51,5 +51,7 @@ public class Utils {
 		} while (doubleInput == null);
 		return doubleInput;
 	}
-
+	public void tearDown() {
+		scanner.close();
+	}
 }

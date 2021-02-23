@@ -11,6 +11,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.exceptions.CustomerNotFoundException;
+import com.qa.ims.exceptions.ItemNotFoundException;
 import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.utils.DBUtils;
 
@@ -40,7 +42,7 @@ public class ItemDAO implements Dao<Item> {
 				items.add(modelFromResultSet(resultSet));
 			}
 			return items;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
@@ -52,11 +54,13 @@ public class ItemDAO implements Dao<Item> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("SELECT * FROM items where id =" + id);) {
-			Item item = null;
-			resultSet.next();
-			item=modelFromResultSet(resultSet);
-			return item;
-		} catch (SQLException e) {
+			if(resultSet.next()) {
+				return modelFromResultSet(resultSet);
+			}else{
+				throw new ItemNotFoundException();
+			}
+			
+		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
@@ -71,7 +75,7 @@ public class ItemDAO implements Dao<Item> {
 				statement.setDouble(2, t.getValue());
 				statement.executeUpdate();
 				return readLatest();
-		}catch (SQLException e) {
+		}catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
@@ -86,7 +90,7 @@ public class ItemDAO implements Dao<Item> {
 			resultSet.next();
 			item=modelFromResultSet(resultSet);
 			return item;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
@@ -100,9 +104,12 @@ public class ItemDAO implements Dao<Item> {
 				statement.setString(1, t.getName());
 				statement.setDouble(2, t.getValue());
 				statement.setLong(3, t.getId());
-				statement.executeUpdate();
-				return read(t.getId());
-		} catch (SQLException e) {
+				if(statement.executeUpdate() == 1) {
+					return read(t.getId());
+				}else{
+					throw new ItemNotFoundException();
+				}
+		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
@@ -114,8 +121,12 @@ public class ItemDAO implements Dao<Item> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("Delete From items where id = ?");) {
 				statement.setLong(1, id);
-				return statement.executeUpdate();
-		} catch (SQLException e) {
+				if(statement.executeUpdate() == 1) {
+					return 1;
+				}else{
+					throw new ItemNotFoundException();
+				}
+		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}

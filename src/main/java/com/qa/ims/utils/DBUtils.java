@@ -80,7 +80,7 @@ public class DBUtils {
 		instance = new DBUtils();
 		return instance;
 	}
-
+	
 	public static DBUtils connect(String properties) {
 		instance = new DBUtils(properties);
 		return instance;

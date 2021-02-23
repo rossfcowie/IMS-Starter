@@ -1,5 +1,7 @@
 package com.qa.ims.persistence.domain;
 
+import java.text.DecimalFormat;
+
 public class Item {
 
 	private Long id;
@@ -12,6 +14,7 @@ public class Item {
 		this.setName(name);
 		this.setValue(value);
 	}
+
 	public Item(String name, Double value2) {
 		this.setName(name);
 		this.setValue(value2);
@@ -23,7 +26,9 @@ public class Item {
 		return name;
 	}
 	public Double getValue() {
-		return value;
+		DecimalFormat decim = new DecimalFormat("0.00");
+		return Double.parseDouble(decim.format(value));
+		
 	}
 	public void setId(Long id) {
 		this.id = id;
@@ -37,7 +42,7 @@ public class Item {
 	
 	@Override
 	public String toString() {
-		return "id=" + id + ", name=" + name + ", value=" + value;
+		return "}=name:" + name + "={\nid=" + id + "\nvalue=£" + getValue() + "\n";
 	}
 
 	@Override
