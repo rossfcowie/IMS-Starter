@@ -6,20 +6,29 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.ItemDAO;
-import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.dao.ItemEditDAO;
 import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.ItemEdit;
 import com.qa.ims.utils.Utils;
 
-public class ItemController implements CrudController<Item> {
+public class ItemController implements CrudController<Item,ItemEdit> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	private ItemDAO itemDAO;
+	private ItemEditDAO itemEDAO;
 	private Utils utils;
 	
 	public ItemController(ItemDAO itemDAO, Utils utils) {
 		super();
 		this.itemDAO = itemDAO;
+		this.utils = utils;
+	}
+
+	public ItemController(ItemDAO itemDAO, Utils utils, ItemEditDAO itemEDAO) {
+		super();
+		this.itemDAO = itemDAO;
+		this.itemEDAO = itemEDAO;
 		this.utils = utils;
 	}
 
@@ -60,6 +69,15 @@ public class ItemController implements CrudController<Item> {
 		LOGGER.info("Please enter the id of the item you wish to delete.");
 		Long id = utils.getLong();
 		return itemDAO.delete(id);
+	}
+
+	@Override
+	public List<ItemEdit> readEdits() {
+		List<ItemEdit> changes = itemEDAO.readAll();
+		for (ItemEdit change : changes) {
+			LOGGER.info(change);
+		}
+		return changes;
 	}
 
 }

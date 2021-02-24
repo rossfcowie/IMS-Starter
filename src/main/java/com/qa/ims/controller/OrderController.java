@@ -7,19 +7,23 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.dao.OrderEditsDAO;
 import com.qa.ims.persistence.domain.Order;
+import com.qa.ims.persistence.domain.OrderEdit;
 import com.qa.ims.utils.Utils;
 
-public class OrderController implements CrudController<Order> {
+public class OrderController implements CrudController<Order,OrderEdit> {
 	
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	private OrderDAO orderDAO;
+	private OrderEditsDAO orderEDAO;
 	private Utils utils;
 	
-	public OrderController(OrderDAO orderDAO, Utils utils) {
+	public OrderController(OrderDAO orderDAO, Utils utils,OrderEditsDAO orderEDAO) {
 		super();
 		this.orderDAO = orderDAO;
+		this.orderEDAO = orderEDAO;
 		this.utils = utils;
 	}
 	
@@ -74,6 +78,14 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("Calculate cost for which order?");
 		Long orderID = utils.getLong();
 		return orderDAO.getOrderCost(orderID);
+	}
+	@Override
+	public List<OrderEdit> readEdits() {
+		List<OrderEdit> changes = orderEDAO.readAll();
+		for (OrderEdit change : changes) {
+			LOGGER.info(change);
+		}
+		return changes;
 	}
 
 }

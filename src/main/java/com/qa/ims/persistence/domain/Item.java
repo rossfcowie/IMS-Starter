@@ -1,6 +1,7 @@
 package com.qa.ims.persistence.domain;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Item {
@@ -8,7 +9,7 @@ public class Item {
 	private Long id;
 	private String name;
 	private Double value;
-	private List<Long> history;
+	private List<Long> history = new ArrayList<>();
 	
 
 	public Item(Long id, String name, Double value) {
@@ -16,7 +17,7 @@ public class Item {
 		this.setName(name);
 		this.setValue(value);
 	}
-
+	
 	public Item(String name, Double value2) {
 		this.setName(name);
 		this.setValue(value2);
@@ -41,10 +42,11 @@ public class Item {
 	public void setValue(Double value2) {
 		this.value = value2;
 	}
+
 	
 	@Override
 	public String toString() {
-		return "}=name:" + name + "={\nid=" + id + "\nvalue=£" + getValue() + "\n";
+		return "}=name:" + name + "={\nid=" + id  + "\nvalue=£" + getValue();
 	}
 
 	@Override

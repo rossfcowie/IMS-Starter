@@ -1,5 +1,6 @@
 package com.qa.ims.persistence.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
@@ -7,7 +8,7 @@ public class Customer {
 	private Long id;
 	private String firstName;
 	private String surname;
-	private List<Long> history;
+	private List<Long> history = new ArrayList<>();
 
 	public Customer(String firstName, String surname) {
 		this.setFirstName(firstName);

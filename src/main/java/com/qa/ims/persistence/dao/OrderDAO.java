@@ -12,10 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.IMS;
-import com.qa.ims.exceptions.CustomerNotFoundException;
 import com.qa.ims.exceptions.OrderNotFoundException;
-import com.qa.ims.persistence.domain.Customer;
-import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
@@ -28,11 +25,11 @@ public class OrderDAO implements Dao<Order> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders group by id");) {
-			List<Order> customers = new ArrayList<>();
+			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
-				customers.add(modelFromResultSet(resultSet));
+				orders.add(modelFromResultSet(resultSet));
 			}
-			return customers;
+			return orders;
 		} catch (SQLException e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());

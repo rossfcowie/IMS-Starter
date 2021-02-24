@@ -42,6 +42,8 @@ public class User {
 		return Integer.parseInt(Long.toString(permission)) ;
 	}
 
+
+	
 	public String getLevel() {
 		switch(this.getPermission()){
 		

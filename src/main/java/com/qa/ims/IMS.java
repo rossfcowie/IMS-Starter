@@ -10,9 +10,12 @@ import com.qa.ims.controller.ItemController;
 import com.qa.ims.controller.OrderController;
 import com.qa.ims.controller.UserController;
 import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.CustomerEditDAO;
 import com.qa.ims.persistence.dao.ItemDAO;
+import com.qa.ims.persistence.dao.ItemEditDAO;
 import com.qa.ims.persistence.dao.LoginDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.dao.OrderEditsDAO;
 import com.qa.ims.persistence.dao.UserDAO;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.persistence.domain.User;
@@ -33,12 +36,15 @@ public class IMS {
 	public IMS() {
 		this.utils = new Utils();
 		final CustomerDAO custDAO = new CustomerDAO();
+		final CustomerEditDAO customerEDAO = new CustomerEditDAO();
 		final ItemDAO itemDAO = new ItemDAO();
+		final ItemEditDAO itemEDAO = new ItemEditDAO();
 		final OrderDAO orderDAO = new OrderDAO();
 		final UserDAO userDAO = new UserDAO();
-		this.customers = new CustomerController(custDAO, utils);
-		this.orders = new OrderController(orderDAO, utils);
-		this.items = new ItemController(itemDAO, utils);
+		final OrderEditsDAO orderEDAO = new OrderEditsDAO();
+		this.customers = new CustomerController(custDAO, utils,customerEDAO);
+		this.orders = new OrderController(orderDAO, utils,orderEDAO);
+		this.items = new ItemController(itemDAO, utils,itemEDAO);
 		this.users = new UserController(userDAO,utils);
 	}
 
@@ -69,7 +75,7 @@ public class IMS {
 		boolean changeDomain = false;
 		do {
 
-			CrudController<?> active = null;
+			CrudController<?,?> active = null;
 			switch (domain) {
 			case CUSTOMER:
 				active = this.customers;
@@ -102,7 +108,7 @@ public class IMS {
 		} while (!changeDomain);
 	}
 
-	public void doAction(CrudController<?> crudController, Action action) {
+	public void doAction(CrudController<?,?> crudController, Action action) {
 		switch (action) {
 		case CREATE:
 			crudController.create();
@@ -116,6 +122,8 @@ public class IMS {
 		case DELETE:
 			crudController.delete();
 			break;
+		case EDITS:
+			crudController.readEdits();
 		case RETURN:
 			break;
 		default:

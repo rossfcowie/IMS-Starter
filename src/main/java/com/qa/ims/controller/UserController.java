@@ -11,7 +11,7 @@ import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.Utils;
 
-public class UserController implements CrudController<User>{
+public class UserController implements CrudController<User, User>{
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -63,6 +63,13 @@ public class UserController implements CrudController<User>{
 		LOGGER.info("Please enter the id of the user you would like to delete");
 		Long id = utils.getLong();
 		return userDAO.delete(id);
+	}
+
+	@Override
+	public List<User> readEdits() {
+		// Edits to users are not tracked and therefore this cannot be used
+		LOGGER.info("It is not possible to track modifications to users. Sorry.");
+		return null;
 	}
 
 }

@@ -8,7 +8,7 @@ public class Order {
 	private Long id;
 	private Long customerID;
 	private List<Long> itemIDs;
-	private List<Long> history;
+	private List<Long> history = new ArrayList<>();
 
 	@Override
 	public String toString() {
