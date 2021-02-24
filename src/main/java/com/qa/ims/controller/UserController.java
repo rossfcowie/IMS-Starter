@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.UserDAO;
+import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.Utils;
@@ -38,20 +39,30 @@ public class UserController implements CrudController<User>{
 		LOGGER.info("Please enter the permission level");
 		Long level = utils.getPermissions();
 		User user = userDAO.create(new User(name, level));
-		LOGGER.info("User" + user.getUsername() + "created, password set to default 'password'");
+		LOGGER.info("User" + name + "created, password set to default 'password'");
 		return user;
 	}
 
 	@Override
 	public User update() {
-		// TODO Auto-generated method stub
-		return null;
+		LOGGER.info("Please enter the id of the user you would like to update");
+		Long id = utils.getLong();
+		LOGGER.info("Please the new username for this user");
+		String username = utils.getString();
+		LOGGER.info("Please the new password for this user");
+		String password = utils.getString();
+		LOGGER.info("Please enter the level of access for the user");
+		Long permissions = utils.getPermissions();
+		User user = userDAO.update(new User(id, username, password,permissions));
+		LOGGER.info("User Updated");
+		return user;
 	}
 
 	@Override
 	public int delete() {
-		// TODO Auto-generated method stub
-		return 0;
+		LOGGER.info("Please enter the id of the user you would like to delete");
+		Long id = utils.getLong();
+		return userDAO.delete(id);
 	}
 
 }
