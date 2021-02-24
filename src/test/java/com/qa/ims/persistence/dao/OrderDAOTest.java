@@ -28,7 +28,7 @@ public class OrderDAOTest {
 	
 	@Test
 	public void testCreate() {
-		try (Connection connection = DBUtils.getInstance().getConnection();
+		/*try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("Show tables");) {
 				while(resultSet.next()) {
@@ -38,6 +38,7 @@ public class OrderDAOTest {
 		}catch (Exception E) {
 			System.out.println(E.getMessage());
 		}
+		*/
 		final Order created = new Order(2L, 2L);
 		assertEquals(created, DAO.create(created));
 	}

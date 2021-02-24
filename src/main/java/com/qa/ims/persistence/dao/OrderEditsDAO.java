@@ -23,7 +23,9 @@ public class OrderEditsDAO {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("select users.Username, orderedits.OrderID, orderedits.ChangeType from `orderedits` join `users` on orderedits.editorID = users.id");) {
+			
 			List<OrderEdit> orders = new ArrayList<>();
+			System.out.println(resultSet.toString());
 			while (resultSet.next()) {
 				orders.add(modelFromResultSet(resultSet));
 			}
@@ -34,14 +36,15 @@ public class OrderEditsDAO {
 		}
 		return null;
 	}
-	
+
 	
 	public OrderEdit modelFromResultSet(ResultSet resultSet) throws SQLException {
 		String Name = resultSet.getString("Username");
 		Long OrderID = resultSet.getLong("OrderID");
 		String change = resultSet.getString("ChangeType");
 		OrderEdit finished = new OrderEdit(Name,change,OrderID);
-
+		System.out.println(finished.toString());
+		
 		return finished;
 	}
 	
