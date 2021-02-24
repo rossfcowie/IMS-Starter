@@ -1,12 +1,14 @@
 package com.qa.ims.persistence.domain;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class Item {
 
 	private Long id;
 	private String name;
 	private Double value;
+	private List<Long> history;
 	
 
 	public Item(Long id, String name, Double value) {
@@ -49,6 +51,7 @@ public class Item {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((history == null) ? 0 : history.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
@@ -63,6 +66,11 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
+		if (history == null) {
+			if (other.history != null)
+				return false;
+		} else if (!history.equals(other.history))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;

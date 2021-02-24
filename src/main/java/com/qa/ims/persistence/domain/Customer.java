@@ -1,10 +1,13 @@
 package com.qa.ims.persistence.domain;
 
+import java.util.List;
+
 public class Customer {
 
 	private Long id;
 	private String firstName;
 	private String surname;
+	private List<Long> history;
 
 	public Customer(String firstName, String surname) {
 		this.setFirstName(firstName);
@@ -51,11 +54,13 @@ public class Customer {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((history == null) ? 0 : history.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
 		return result;
 	}
 
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -65,10 +70,15 @@ public class Customer {
 		if (getClass() != obj.getClass())
 			return false;
 		Customer other = (Customer) obj;
-		if (getFirstName() == null) {
-			if (other.getFirstName() != null)
+		if (firstName == null) {
+			if (other.firstName != null)
 				return false;
-		} else if (!getFirstName().equals(other.getFirstName()))
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (history == null) {
+			if (other.history != null)
+				return false;
+		} else if (!history.equals(other.history))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -82,5 +92,7 @@ public class Customer {
 			return false;
 		return true;
 	}
+
+	
 
 }

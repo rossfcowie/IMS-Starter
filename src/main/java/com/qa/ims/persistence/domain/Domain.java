@@ -46,7 +46,18 @@ public enum Domain {
 		
 		
 	}
-
+	public static Domain getDomain(Utils utils) {
+		Domain domain;
+		while (true) {
+			try {
+				domain = Domain.valueOf(utils.getString().toUpperCase());
+				break;
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Invalid selection please try again");
+			}
+		}
+		return domain;
+	}
 	public static Domain getDomain(Utils utils, int level) {
 		Domain domain;
 		while (true) {
@@ -55,8 +66,7 @@ public enum Domain {
 				switch(level){
 				
 				case 4:
-					
-				break;
+					return domain;
 				case 3:
 					//Acceptable domains for a manager to access.
 					break;

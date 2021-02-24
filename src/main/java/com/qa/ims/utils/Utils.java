@@ -34,6 +34,23 @@ public class Utils {
 		return longInput;
 	}
 
+	public Long getPermissions() {
+		String input = null;
+		Long longInput = null;
+		do {
+			try {
+				input = getString();
+				longInput = Long.parseLong(input);
+				if(longInput>4 || longInput<1) {
+					throw new NumberFormatException();
+				}
+			} catch (NumberFormatException nfe) {
+				LOGGER.info("Error - Please enter a number between 1 and 4");
+			}
+		} while (longInput == null);
+		return longInput;
+	}
+	
 	public String getString() {
 		return scanner.nextLine();
 	}

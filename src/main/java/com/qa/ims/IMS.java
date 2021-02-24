@@ -8,10 +8,12 @@ import com.qa.ims.controller.CrudController;
 import com.qa.ims.controller.CustomerController;
 import com.qa.ims.controller.ItemController;
 import com.qa.ims.controller.OrderController;
+import com.qa.ims.controller.UserController;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.ItemDAO;
 import com.qa.ims.persistence.dao.LoginDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.dao.UserDAO;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.DBUtils;
@@ -20,11 +22,12 @@ import com.qa.ims.utils.Utils;
 public class IMS {
 
 	public static final Logger LOGGER = LogManager.getLogger();
-
+	public static User userLogin = null;
 	private final CustomerController customers;
 	private final ItemController items;
 	private final Utils utils;
 	private final OrderController orders;
+	private final UserController users;
 	private final LoginDAO login = new LoginDAO();
 
 	public IMS() {
@@ -32,16 +35,16 @@ public class IMS {
 		final CustomerDAO custDAO = new CustomerDAO();
 		final ItemDAO itemDAO = new ItemDAO();
 		final OrderDAO orderDAO = new OrderDAO();
-
+		final UserDAO userDAO = new UserDAO();
 		this.customers = new CustomerController(custDAO, utils);
 		this.orders = new OrderController(orderDAO, utils);
 		this.items = new ItemController(itemDAO, utils);
+		this.users = new UserController(userDAO,utils);
 	}
 
 	public void imsSystem() {
 		LOGGER.info("Welcome to the Inventory Management System!");
 		DBUtils.connect();
-		User userLogin = null;
 		do {
 			LOGGER.info("Please enter your username.");
 			String username = utils.getString();
@@ -76,6 +79,9 @@ public class IMS {
 				break;
 			case ORDER:
 				active = this.orders;
+				break;
+			case USER:
+				active = this.users;
 				break;
 			case STOP:
 				return;

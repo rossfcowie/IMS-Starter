@@ -5,8 +5,8 @@ public class ItemNotFoundException extends RuntimeException {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1319030538360418255L;
-	
+	private static final long serialVersionUID = -4626742359157269245L;
+
 	public String getMessage() {
 		return "No item could be found with the requested parameters.";
 		
