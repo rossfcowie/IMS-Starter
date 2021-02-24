@@ -63,17 +63,54 @@ public class UserDAOTest {
 		DAO.create(created);
 		assertEquals(new User(1L,"ChrisP","password",1L), DAO.read(ID));
 	}
-	@Ignore
+	
 	@Test
 	public void testUpdate() {
-		final User updated = new User(1L,"ChrisP","password",1L);
+		User created = new User(1L,"ChrisP","password",1L);
+		DAO.create(created);
+		final User updated = new User(1L,"ChrisP","aa",2L);
 		assertEquals(updated, DAO.update(updated));
 
 	}
-	@Ignore
+	
 	@Test
 	public void testDelete() {
+		User created = new User(1L,"ChrisP","password",1L);
+		DAO.create(created);
 		assertEquals(1, DAO.delete(1));
+	}
+	
+	@Test
+	public void testDeleteBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		User created = new User(1L,"ChrisP","password",1L);
+		DAO.create(created);
+		assertEquals(0,DAO.delete(1));
+	}
+	@Test
+	public void testCreateBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		final User created = new User(1L,"ChrisP","password",1L);
+		assertEquals(null, DAO.create(created));
+	}
+	
+	@Test
+	public void testReadAllBadSQL() {
+		List<User> expected = new ArrayList<>();
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(expected, DAO.readAll());
+	}
+
+	@Test
+	public void testReadLatestBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(null, DAO.readLatest());
+	}
+
+	@Test
+	public void testReadBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(null, DAO.read(1L));
 	}
 	
 }

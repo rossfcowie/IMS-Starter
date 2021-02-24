@@ -92,10 +92,11 @@ public class UserDAO implements Dao<User> {
 	public User update(User t) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("UPDATE Users SET username = ?, password = ? WHERE id = ?");) {
+						.prepareStatement("UPDATE Users SET username = ?, password = ?, Permissions = ? WHERE id = ?");) {
 			statement.setString(1, t.getUsername());
 			statement.setString(2, t.getPassword());
-			statement.setLong(3, t.getId());
+			statement.setLong(3, t.getPermission());
+			statement.setLong(4, t.getId());
 			if(statement.executeUpdate() == 1) {
 				return read(t.getId());
 			}else{
