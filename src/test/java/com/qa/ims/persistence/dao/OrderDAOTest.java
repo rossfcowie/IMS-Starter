@@ -3,16 +3,17 @@ package com.qa.ims.persistence.dao;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.IMS;
 import com.qa.ims.persistence.domain.Order;
+import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.DBUtils;
 
 public class OrderDAOTest {
@@ -20,12 +21,23 @@ public class OrderDAOTest {
 	
 	@Before
 	public void setup() {
+		IMS.userLogin = new User(1L,"admin","admin",4L);
 		DBUtils.connect();
 		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
 	}
 	
 	@Test
 	public void testCreate() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("Show tables");) {
+				while(resultSet.next()) {
+					System.out.println(resultSet.getString(1));
+				}
+				
+		}catch (Exception E) {
+			System.out.println(E.getMessage());
+		}
 		final Order created = new Order(2L, 2L);
 		assertEquals(created, DAO.create(created));
 	}

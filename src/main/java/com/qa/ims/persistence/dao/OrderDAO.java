@@ -11,9 +11,11 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.IMS;
 import com.qa.ims.exceptions.CustomerNotFoundException;
 import com.qa.ims.exceptions.OrderNotFoundException;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
@@ -78,11 +80,26 @@ public class OrderDAO implements Dao<Order> {
 						.prepareStatement("INSERT INTO orders(CustomerID) VALUES (?)");) {
 			statement.setLong(1, t.getCustomerID());
 			statement.executeUpdate();
-			return readLatest();
+			return recordCreate(readLatest());
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
+		return null;
+	}
+	
+	private Order recordCreate(Order t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Create')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
 		return null;
 	}
 
@@ -95,7 +112,7 @@ public class OrderDAO implements Dao<Order> {
 			statement.setLong(1, t.getItemIDs().get(0));
 			statement.setLong(2, t.getId());
 			if(statement.executeUpdate() == 1) {
-				return read(t.getId());
+				return recordAdd(read(t.getId()));
 			}else{
 				throw new OrderNotFoundException();
 			}
@@ -103,6 +120,21 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
+		return null;
+	}
+	
+	private Order recordAdd(Order t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Add')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
 		return null;
 	}
 
@@ -114,7 +146,7 @@ public class OrderDAO implements Dao<Order> {
 			statement.setLong(1, oid);
 			statement.setLong(2, itemIDs.get(0));
 			if(statement.executeUpdate() == 1) {
-				return read(oid);
+				return recordRemove(read(oid));
 			}else{
 				throw new OrderNotFoundException();
 			}
@@ -124,6 +156,21 @@ public class OrderDAO implements Dao<Order> {
 		}
 		return null;
 	}
+	
+	private Order recordRemove(Order t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Remove')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
+		return null;
+	}
 
 	@Override
 	public int delete(long id) {
@@ -131,7 +178,7 @@ public class OrderDAO implements Dao<Order> {
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id = ?");) {
 			statement.setLong(1, id);
 			if(statement.executeUpdate() == 1) {
-				return 1;
+				return recordDelete(id);
 			}else{
 				throw new OrderNotFoundException();
 			}
@@ -139,6 +186,21 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
+		return 0;
+	}
+	
+	private int recordDelete(Long id) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Delete')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, id);
+			statement.execute();
+			return 1;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
 		return 0;
 	}
 

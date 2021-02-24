@@ -9,7 +9,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.qa.ims.IMS;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.DBUtils;
 
 public class CustomerDAOTest {
@@ -18,6 +20,7 @@ public class CustomerDAOTest {
 
 	@Before
 	public void setup() {
+		IMS.userLogin = new User(1L,"admin","admin",4L);
 		DBUtils.connect();
 		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
 	}

@@ -11,8 +11,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.IMS;
 import com.qa.ims.exceptions.CustomerNotFoundException;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.DBUtils;
 
@@ -86,7 +88,7 @@ public class CustomerDAO implements Dao<Customer> {
 				statement.setLong(3, u.getId());
 				statement.executeUpdate();
 				statement.close();
-				return readLatest();
+				return recordCreate(readLatest());
 			} catch (Exception e) {
 				LOGGER.debug(e);
 				LOGGER.error(e.getMessage());
@@ -98,6 +100,23 @@ public class CustomerDAO implements Dao<Customer> {
 		}
 		return null;
 	}
+	
+	private Customer recordCreate(Customer t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO CustomerEdits(EditorID, CustomerID,ChangeType) VALUES (?,?,'Create')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	
 
 	@Override
 	public Customer read(Long id) {
@@ -134,11 +153,25 @@ public class CustomerDAO implements Dao<Customer> {
 			statement.setString(2, customer.getSurname());
 			statement.setLong(3, customer.getId());
 			if (statement.executeUpdate() == 1) {
-				return read(customer.getId());
+				return recordUpdate(read(customer.getId()));
 			} else {
 				throw new CustomerNotFoundException();
 			}
 
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	
+	private Customer recordUpdate(Customer t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO CustomerEdits(EditorID, CustomerID,ChangeType) VALUES (?,?,'Update')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -157,7 +190,7 @@ public class CustomerDAO implements Dao<Customer> {
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM customers WHERE id = ?");) {
 			statement.setLong(1, id);
 			if (statement.executeUpdate() == 1) {
-				return 1;
+				return recordDelete(id);
 			} else {
 				throw new CustomerNotFoundException();
 			}
@@ -168,4 +201,20 @@ public class CustomerDAO implements Dao<Customer> {
 		return 0;
 	}
 
+	private int recordDelete(Long id) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO CustomerEdits(EditorID, CustomerID,ChangeType) VALUES (?,?,'Delete')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, id);
+			statement.execute();
+			return 1;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
+		return 0;
+	}
+	
+	
 }
