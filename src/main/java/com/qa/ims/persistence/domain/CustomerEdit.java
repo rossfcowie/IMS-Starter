@@ -5,6 +5,11 @@ public class CustomerEdit extends Edit {
 
 	
 	
+	@Override
+	public String toString() {
+		return "CustomerEdit [CustomerID=" + CustomerID + "," + super.toString();
+	}
+
 	public CustomerEdit(String editor, String change, Long customerID) {
 		super(editor, change);
 		CustomerID = customerID;

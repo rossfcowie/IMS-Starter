@@ -7,6 +7,10 @@ public class Edit {
 	
 	
 
+	@Override
+	public String toString() {
+		return "Editor=" + Editor + ", Change=" + Change + "]";
+	}
 	public Edit(String editor, String change) {
 		Editor = editor;
 		Change = change;
