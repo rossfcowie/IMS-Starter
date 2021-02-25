@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.IMS;
 import com.qa.ims.exceptions.CustomerNotFoundException;
 import com.qa.ims.exceptions.ItemNotFoundException;
 import com.qa.ims.persistence.domain.Item;
@@ -49,6 +50,8 @@ public class ItemDAO implements Dao<Item> {
 		return new ArrayList<>();
 	}
 
+
+	
 	@Override
 	public Item read(Long id) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
@@ -81,6 +84,8 @@ public class ItemDAO implements Dao<Item> {
 		}
 		return null;
 	}
+
+	
 
 	public Item readLatest() {
 		try (Connection connection = DBUtils.getInstance().getConnection();

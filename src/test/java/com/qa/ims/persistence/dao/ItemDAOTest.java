@@ -8,8 +8,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.IMS;
 import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.DBUtils;
 
 public class ItemDAOTest {
@@ -18,6 +19,7 @@ public class ItemDAOTest {
 
 	@Before
 	public void setup() {
+		IMS.userLogin = new User(1L,"admin","admin",4L);
 		DBUtils.connect();
 		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
 	}

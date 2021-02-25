@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.persistence.dao</a> &gt; <span class="el_source">CustomerDAO.java</span></div><h1>CustomerDAO.java</h1><pre class="source lang-java linenums">package com.qa.ims.persistence.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.IMS;
+import com.qa.ims.exceptions.CustomerNotFoundException;
+import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.User;
+import com.qa.ims.utils.DBUtils;
+
+<span class="fc" id="L21">public class CustomerDAO implements Dao&lt;Customer&gt; {</span>
+
+<span class="fc" id="L23">	public static final Logger LOGGER = LogManager.getLogger();</span>
+<span class="fc" id="L24">	public UserDAO userDAO = new UserDAO();</span>
+
+	@Override
+	public Customer modelFromResultSet(ResultSet resultSet) throws SQLException {
+<span class="fc" id="L28">		Long id = resultSet.getLong(&quot;id&quot;);</span>
+<span class="fc" id="L29">		String firstName = resultSet.getString(&quot;first_name&quot;);</span>
+<span class="fc" id="L30">		String surname = resultSet.getString(&quot;surname&quot;);</span>
+<span class="fc" id="L31">		return new Customer(id, firstName, surname);</span>
+	}
+
+	/**
+	 * Reads all customers from the database
+	 * 
+	 * @return A list of customers
+	 */
+	@Override
+	public List&lt;Customer&gt; readAll() {
+<span class="fc" id="L41">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L42">				Statement statement = connection.createStatement();</span>
+<span class="fc" id="L43">				ResultSet resultSet = statement.executeQuery(&quot;SELECT * FROM customers&quot;);) {</span>
+<span class="fc" id="L44">			List&lt;Customer&gt; customers = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">			while (resultSet.next()) {</span>
+<span class="fc" id="L46">				customers.add(modelFromResultSet(resultSet));</span>
+			}
+<span class="fc" id="L48">			return customers;</span>
+<span class="fc" id="L49">		} catch (SQLException e) {</span>
+<span class="fc" id="L50">			LOGGER.debug(e);</span>
+<span class="fc" id="L51">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L53">		return new ArrayList&lt;&gt;();</span>
+	}
+
+	
+	public Customer readLatest() {
+<span class="fc" id="L58">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L59">				Statement statement = connection.createStatement();</span>
+<span class="fc" id="L60">				ResultSet resultSet = statement.executeQuery(&quot;SELECT * FROM customers ORDER BY id DESC LIMIT 1&quot;);) {</span>
+<span class="fc" id="L61">			resultSet.next();</span>
+<span class="fc" id="L62">			return modelFromResultSet(resultSet);</span>
+<span class="fc" id="L63">		} catch (Exception e) {</span>
+<span class="fc" id="L64">			LOGGER.debug(e);</span>
+<span class="fc" id="L65">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L67">		return null;</span>
+	}
+
+	/**
+	 * Creates a customer in the database
+	 * 
+	 * @param customer - takes in a customer object. id will be ignored
+	 */
+	@Override
+	public Customer create(Customer customer) {
+		try {
+
+<span class="fc" id="L79">			User u = userDAO.create(new User(customer.getFirstName() + customer.getSurname().substring(0, 2), 1L));</span>
+
+<span class="fc" id="L81">			try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L82">					PreparedStatement statement = connection</span>
+<span class="fc" id="L83">							.prepareStatement(&quot;INSERT INTO customers(first_name, surname,UserID) VALUES (?, ?,?)&quot;);) {</span>
+<span class="fc" id="L84">				statement.setString(1, customer.getFirstName());</span>
+<span class="fc" id="L85">				statement.setString(2, customer.getSurname());</span>
+<span class="fc" id="L86">				statement.setLong(3, u.getId());</span>
+<span class="fc" id="L87">				statement.executeUpdate();</span>
+<span class="fc" id="L88">				statement.close();</span>
+<span class="fc" id="L89">				return readLatest();</span>
+<span class="fc" id="L90">			} catch (Exception e) {</span>
+<span class="fc" id="L91">				LOGGER.debug(e);</span>
+<span class="fc" id="L92">				LOGGER.error(e.getMessage());</span>
+			}
+<span class="fc" id="L94">			return null;</span>
+<span class="nc" id="L95">		} catch (Exception e) {</span>
+<span class="nc" id="L96">			LOGGER.debug(e);</span>
+<span class="nc" id="L97">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L99">		return null;</span>
+	}
+
+
+	public Customer readFromUser(Long uid) {
+<span class="fc" id="L104">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L105">				PreparedStatement statement = connection.prepareStatement(&quot;SELECT * FROM customers WHERE UserID = ?&quot;);) {</span>
+<span class="fc" id="L106">			statement.setLong(1, uid);</span>
+<span class="fc" id="L107">			try (ResultSet resultSet = statement.executeQuery();) {</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">				if (resultSet.next()) {</span>
+<span class="fc" id="L109">					return modelFromResultSet(resultSet);</span>
+				} else {
+<span class="nc" id="L111">					throw new CustomerNotFoundException();</span>
+				}
+			}
+<span class="nc" id="L114">		} catch (Exception e) {</span>
+<span class="nc" id="L115">			LOGGER.debug(e);</span>
+<span class="nc" id="L116">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L118">		return null;</span>
+	}
+
+	@Override
+	public Customer read(Long id) {
+<span class="fc" id="L123">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L124">				PreparedStatement statement = connection.prepareStatement(&quot;SELECT * FROM customers WHERE id = ?&quot;);) {</span>
+<span class="fc" id="L125">			statement.setLong(1, id);</span>
+<span class="fc" id="L126">			try (ResultSet resultSet = statement.executeQuery();) {</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">				if (resultSet.next()) {</span>
+<span class="fc" id="L128">					return modelFromResultSet(resultSet);</span>
+				} else {
+<span class="nc" id="L130">					throw new CustomerNotFoundException();</span>
+				}
+			}
+<span class="fc" id="L133">		} catch (Exception e) {</span>
+<span class="fc" id="L134">			LOGGER.debug(e);</span>
+<span class="fc" id="L135">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L137">		return null;</span>
+	}
+	
+	/**
+	 * Updates a customer in the database
+	 * 
+	 * @param customer - takes in a customer object, the id field will be used to
+	 *                 update that customer in the database
+	 * @return
+	 */
+	@Override
+	public Customer update(Customer customer) {
+<span class="fc" id="L149">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L150">				PreparedStatement statement = connection</span>
+<span class="fc" id="L151">						.prepareStatement(&quot;UPDATE customers SET first_name = ?, surname = ? WHERE id = ?&quot;);) {</span>
+<span class="fc" id="L152">			statement.setString(1, customer.getFirstName());</span>
+<span class="fc" id="L153">			statement.setString(2, customer.getSurname());</span>
+<span class="fc" id="L154">			statement.setLong(3, customer.getId());</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">			if (statement.executeUpdate() == 1) {</span>
+<span class="fc" id="L156">				return read(customer.getId());</span>
+			} else {
+<span class="nc" id="L158">				throw new CustomerNotFoundException();</span>
+			}
+
+<span class="nc" id="L161">		} catch (Exception e) {</span>
+<span class="nc" id="L162">			LOGGER.debug(e);</span>
+<span class="nc" id="L163">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="nc" id="L165">		return null;</span>
+	}
+	
+
+
+	/**
+	 * Deletes a customer in the database
+	 * 
+	 * @param id - id of the customer
+	 */
+	@Override
+	public int delete(long id) {
+<span class="fc" id="L177">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L178">				PreparedStatement statement = connection.prepareStatement(&quot;DELETE FROM customers WHERE id = ?&quot;);) {</span>
+<span class="fc" id="L179">			statement.setLong(1, id);</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">			if (statement.executeUpdate() == 1) {</span>
+<span class="fc" id="L181">				return 1;</span>
+			} else {
+<span class="nc" id="L183">				throw new CustomerNotFoundException();</span>
+			}
+<span class="fc" id="L185">		} catch (Exception e) {</span>
+<span class="fc" id="L186">			LOGGER.debug(e);</span>
+<span class="fc" id="L187">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L189">		return 0;</span>
+	}
+
+
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IMS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims</a> &gt; <span class="el_source">IMS.java</span></div><h1>IMS.java</h1><pre class="source lang-java linenums">package com.qa.ims;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.controller.Action;
+import com.qa.ims.controller.CrudController;
+import com.qa.ims.controller.CustomerController;
+import com.qa.ims.controller.ItemController;
+import com.qa.ims.controller.OrderController;
+import com.qa.ims.controller.UserController;
+import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.CustomerEditDAO;
+import com.qa.ims.persistence.dao.ItemDAO;
+import com.qa.ims.persistence.dao.ItemEditDAO;
+import com.qa.ims.persistence.dao.LoginDAO;
+import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.dao.OrderEditsDAO;
+import com.qa.ims.persistence.dao.UserDAO;
+import com.qa.ims.persistence.domain.Domain;
+import com.qa.ims.persistence.domain.User;
+import com.qa.ims.utils.DBUtils;
+import com.qa.ims.utils.Utils;
+
+public class IMS {
+
+<span class="fc" id="L27">	public static final Logger LOGGER = LogManager.getLogger();</span>
+<span class="fc" id="L28">	public static User userLogin = null;</span>
+	private final CustomerController customers;
+	private final ItemController items;
+	private final Utils utils;
+	private final OrderController orders;
+	private final UserController users;
+<span class="fc" id="L34">	private final LoginDAO login = new LoginDAO();</span>
+
+<span class="fc" id="L36">	public IMS() {</span>
+<span class="fc" id="L37">		this.utils = new Utils();</span>
+<span class="fc" id="L38">		final CustomerDAO custDAO = new CustomerDAO();</span>
+<span class="fc" id="L39">		final CustomerEditDAO customerEDAO = new CustomerEditDAO();</span>
+<span class="fc" id="L40">		final ItemDAO itemDAO = new ItemDAO();</span>
+<span class="fc" id="L41">		final ItemEditDAO itemEDAO = new ItemEditDAO();</span>
+<span class="fc" id="L42">		final OrderDAO orderDAO = new OrderDAO();</span>
+<span class="fc" id="L43">		final UserDAO userDAO = new UserDAO();</span>
+<span class="fc" id="L44">		final OrderEditsDAO orderEDAO = new OrderEditsDAO();</span>
+<span class="fc" id="L45">		this.customers = new CustomerController(custDAO, utils,customerEDAO);</span>
+<span class="fc" id="L46">		this.orders = new OrderController(orderDAO, utils,orderEDAO);</span>
+<span class="fc" id="L47">		this.items = new ItemController(itemDAO, utils,itemEDAO);</span>
+<span class="fc" id="L48">		this.users = new UserController(userDAO,utils);</span>
+<span class="fc" id="L49">	}</span>
+
+
+	public void imsSystem() {
+<span class="nc" id="L53">		LOGGER.info(&quot;Welcome to the Inventory Management System!&quot;);</span>
+<span class="nc" id="L54">		DBUtils.connect();</span>
+		do {
+<span class="nc" id="L56">			LOGGER.info(&quot;Please enter your username.&quot;);</span>
+<span class="nc" id="L57">			String username = utils.getString();</span>
+<span class="nc" id="L58">			LOGGER.info(&quot;Please enter your password.&quot;);</span>
+<span class="nc" id="L59">			String password = utils.getString();</span>
+<span class="nc" id="L60">			userLogin = this.login.attemptLogin(username, password);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		} while (null == userLogin);</span>
+<span class="nc" id="L62">		Domain domain = null;</span>
+<span class="nc" id="L63">		int permissionLevel = userLogin.getPermission();</span>
+		do {
+			
+<span class="nc" id="L66">			LOGGER.info(&quot;Which entity would you like to use?&quot;);</span>
+<span class="nc" id="L67">			Domain.printDomains(permissionLevel);</span>
+<span class="nc" id="L68">			domain = Domain.getDomain(utils, permissionLevel);</span>
+<span class="nc" id="L69">			domainAction(domain);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">		} while (domain != Domain.STOP);</span>
+
+<span class="nc" id="L72">		tearDown();</span>
+<span class="nc" id="L73">	}</span>
+
+	private void domainAction(Domain domain) {
+<span class="nc" id="L76">		boolean changeDomain = false;</span>
+		do {
+
+<span class="nc" id="L79">			CrudController&lt;?,?&gt; active = null;</span>
+<span class="nc bnc" id="L80" title="All 6 branches missed.">			switch (domain) {</span>
+			case CUSTOMER:
+<span class="nc" id="L82">				active = this.customers;</span>
+<span class="nc" id="L83">				break;</span>
+			case ITEM:
+<span class="nc" id="L85">				active = this.items;</span>
+<span class="nc" id="L86">				break;</span>
+			case ORDER:
+<span class="nc" id="L88">				active = this.orders;</span>
+<span class="nc" id="L89">				break;</span>
+			case USER:
+<span class="nc" id="L91">				active = this.users;</span>
+<span class="nc" id="L92">				break;</span>
+			case STOP:
+<span class="nc" id="L94">				return;</span>
+			default:
+				break;
+			}
+
+<span class="nc" id="L99">			LOGGER.info(() -&gt; &quot;What would you like to do with &quot; + domain.name().toLowerCase() + &quot;:&quot;);</span>
+
+<span class="nc" id="L101">			Action.printActions(userLogin.getPermission(),domain);</span>
+<span class="nc" id="L102">			Action action = Action.getAction(utils,userLogin.getPermission(),domain);</span>
+
+<span class="nc bnc" id="L104" title="All 2 branches missed.">			if (action == Action.RETURN) {</span>
+<span class="nc" id="L105">				changeDomain = true;</span>
+			} else {
+<span class="nc" id="L107">				doAction(active, action);</span>
+			}
+<span class="nc bnc" id="L109" title="All 2 branches missed.">		} while (!changeDomain);</span>
+<span class="nc" id="L110">	}</span>
+
+	public void doAction(CrudController&lt;?,?&gt; crudController, Action action) {
+<span class="nc bnc" id="L113" title="All 7 branches missed.">		switch (action) {</span>
+		case CREATE:
+<span class="nc" id="L115">			crudController.create();</span>
+<span class="nc" id="L116">			break;</span>
+		case READ:
+<span class="nc" id="L118">			crudController.readAll();</span>
+<span class="nc" id="L119">			break;</span>
+		case UPDATE:
+<span class="nc" id="L121">			crudController.update();</span>
+<span class="nc" id="L122">			break;</span>
+		case DELETE:
+<span class="nc" id="L124">			crudController.delete();</span>
+<span class="nc" id="L125">			break;</span>
+		case EDITS:
+<span class="nc" id="L127">			crudController.readEdits();</span>
+		case RETURN:
+<span class="nc" id="L129">			break;</span>
+		default:
+			break;
+		}
+<span class="nc" id="L133">	}</span>
+
+	private void tearDown() {
+<span class="nc" id="L136">		utils.tearDown();</span>
+<span class="nc" id="L137">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
