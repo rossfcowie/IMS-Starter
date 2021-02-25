@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.qa.ims.controller.CustomerController;
 import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.CustomerEditDAO;
 import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.utils.Utils;
 
@@ -26,6 +27,9 @@ public class CustomerControllerTest {
 	@Mock
 	private CustomerDAO dao;
 	
+	@Mock
+	private CustomerEditDAO edao;
+	
 	@InjectMocks
 	private CustomerController controller;
 
@@ -36,10 +40,12 @@ public class CustomerControllerTest {
 
 		Mockito.when(utils.getString()).thenReturn(F_NAME, L_NAME);
 		Mockito.when(dao.create(created)).thenReturn(created);
+		Mockito.when(edao.recordCreate(created)).thenReturn(created);
 		assertEquals(created, controller.create());
 
 		Mockito.verify(utils, Mockito.times(2)).getString();
 		Mockito.verify(dao, Mockito.times(1)).create(created);
+		Mockito.verify(this.edao, Mockito.times(1)).recordCreate(created);
 	}
 
 	@Test
@@ -61,12 +67,14 @@ public class CustomerControllerTest {
 		Mockito.when(this.utils.getLong()).thenReturn(1L);
 		Mockito.when(this.utils.getString()).thenReturn(updated.getFirstName(), updated.getSurname());
 		Mockito.when(this.dao.update(updated)).thenReturn(updated);
+		Mockito.when(edao.recordUpdate(updated)).thenReturn(updated);
 
 		assertEquals(updated, this.controller.update());
 
 		Mockito.verify(this.utils, Mockito.times(1)).getLong();
 		Mockito.verify(this.utils, Mockito.times(2)).getString();
 		Mockito.verify(this.dao, Mockito.times(1)).update(updated);
+		Mockito.verify(this.edao, Mockito.times(1)).recordUpdate(updated);
 	}
 
 	@Test
@@ -75,11 +83,13 @@ public class CustomerControllerTest {
 
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(dao.delete(ID)).thenReturn(1);
+		Mockito.when(edao.recordDelete(ID)).thenReturn(1);
 
 		assertEquals(1L, this.controller.delete());
 
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(dao, Mockito.times(1)).delete(ID);
+		Mockito.verify(this.edao, Mockito.times(1)).recordDelete(ID);
 	}
 
 }

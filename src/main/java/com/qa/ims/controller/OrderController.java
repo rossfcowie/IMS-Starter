@@ -42,7 +42,7 @@ public class OrderController implements CrudController<Order,OrderEdit> {
 		Long customer = utils.getLong();
 		Order order = orderDAO.create(new Order(customer));
 		LOGGER.info("Order created");
-		return order;
+		return orderEDAO.recordCreate(order);
 	}
 
 	@Override
@@ -56,11 +56,11 @@ public class OrderController implements CrudController<Order,OrderEdit> {
 		if(choice.toLowerCase().startsWith("a")) {
 			LOGGER.info("What Item would you like to add?");
 			 itemID.add(utils.getLong());
-				order = orderDAO.update(new Order(orderID,itemID));
+				order = orderEDAO.recordAdd(orderDAO.update(new Order(orderID,itemID)));
 		}else if(choice.toLowerCase().startsWith("r")) {
 			LOGGER.info("What Item would you like to remove?");
 			itemID.add(utils.getLong());
-			order = orderDAO.update(orderID,itemID);
+			order = orderEDAO.recordRemove(orderDAO.update(orderID,itemID));
 		}else {
 			LOGGER.info("Please select either add or remove?");
 			return null;
@@ -72,7 +72,7 @@ public class OrderController implements CrudController<Order,OrderEdit> {
 	public int delete() {
 		LOGGER.info("Delete which order?");
 		Long orderID = utils.getLong();
-		return orderDAO.delete(orderID);
+		return orderEDAO.recordDelete(Long.valueOf(orderDAO.delete(orderID)));
 	}
 	public Double cost() {
 		LOGGER.info("Calculate cost for which order?");

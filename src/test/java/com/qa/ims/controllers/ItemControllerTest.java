@@ -13,7 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.qa.ims.controller.ItemController;
 import com.qa.ims.persistence.dao.ItemDAO;
-import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.dao.ItemEditDAO;
 import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.utils.Utils;
 
@@ -24,7 +24,8 @@ public class ItemControllerTest {
 	private Utils utils;
 	@Mock
 	private ItemDAO itemDAO;
-	
+	@Mock
+	private ItemEditDAO edao;
 	@InjectMocks
 	private ItemController itemController;
 	
@@ -37,12 +38,13 @@ public class ItemControllerTest {
 		Mockito.when(utils.getString()).thenReturn(NAME);
 		Mockito.when(utils.getDouble()).thenReturn(VALUE);
 		Mockito.when(itemDAO.create(created)).thenReturn(created);
-
+		Mockito.when(edao.recordCreate(created)).thenReturn(created);
 		assertEquals(created, itemController.create());
 
 		Mockito.verify(utils, Mockito.times(1)).getString();
 		Mockito.verify(utils, Mockito.times(1)).getDouble();
 		Mockito.verify(itemDAO, Mockito.times(1)).create(created);
+		Mockito.verify(edao, Mockito.times(1)).recordCreate(created);
 	}
 	
 	@Test
@@ -68,23 +70,26 @@ public class ItemControllerTest {
 		Mockito.when(utils.getDouble()).thenReturn(VALUE);
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(itemDAO.update(updated)).thenReturn(updated);
-
+		Mockito.when(edao.recordUpdate(updated)).thenReturn(updated);
 		assertEquals(updated, itemController.update());
 
 		Mockito.verify(utils, Mockito.times(1)).getString();
 		Mockito.verify(utils, Mockito.times(1)).getDouble();
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(itemDAO, Mockito.times(1)).update(updated);
+		Mockito.verify(edao, Mockito.times(1)).recordUpdate(updated);
 	}
 	@Test
 	public void testDelete() {
 		final Long ID = 1L;
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(itemDAO.delete(ID)).thenReturn(1);
+		Mockito.when(edao.recordDelete(ID)).thenReturn(1);
 
 		assertEquals(1L, itemController.delete());
 
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(itemDAO, Mockito.times(1)).delete(ID);
+		Mockito.verify(edao, Mockito.times(1)).recordDelete(ID);
 	}
 }

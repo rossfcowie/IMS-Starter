@@ -77,7 +77,7 @@ public class OrderDAO implements Dao<Order> {
 						.prepareStatement("INSERT INTO orders(CustomerID) VALUES (?)");) {
 			statement.setLong(1, t.getCustomerID());
 			statement.executeUpdate();
-			return recordCreate(readLatest());
+			return readLatest();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -85,20 +85,7 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 	
-	private Order recordCreate(Order t) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Create')");) {
-			statement.setLong(1, IMS.userLogin.getId());
-			statement.setLong(2, t.getId());
-			statement.execute();
-			return t;
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		
-		return null;
-	}
+
 
 	// Add item to order
 	@Override
@@ -109,7 +96,7 @@ public class OrderDAO implements Dao<Order> {
 			statement.setLong(1, t.getItemIDs().get(0));
 			statement.setLong(2, t.getId());
 			if(statement.executeUpdate() == 1) {
-				return recordAdd(read(t.getId()));
+				return read(t.getId());
 			}else{
 				throw new OrderNotFoundException();
 			}
@@ -120,20 +107,7 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 	
-	private Order recordAdd(Order t) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Add')");) {
-			statement.setLong(1, IMS.userLogin.getId());
-			statement.setLong(2, t.getId());
-			statement.execute();
-			return t;
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		
-		return null;
-	}
+
 
 	// Delete item from order
 	public Order update(Long oid, List<Long> itemIDs) {
@@ -143,7 +117,7 @@ public class OrderDAO implements Dao<Order> {
 			statement.setLong(1, oid);
 			statement.setLong(2, itemIDs.get(0));
 			if(statement.executeUpdate() == 1) {
-				return recordRemove(read(oid));
+				return read(oid);
 			}else{
 				throw new OrderNotFoundException();
 			}
@@ -154,20 +128,6 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 	
-	private Order recordRemove(Order t) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Remove')");) {
-			statement.setLong(1, IMS.userLogin.getId());
-			statement.setLong(2, t.getId());
-			statement.execute();
-			return t;
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		
-		return null;
-	}
 
 	@Override
 	public int delete(long id) {
@@ -175,7 +135,7 @@ public class OrderDAO implements Dao<Order> {
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id = ?");) {
 			statement.setLong(1, id);
 			if(statement.executeUpdate() == 1) {
-				return recordDelete(id);
+				return 1;
 			}else{
 				throw new OrderNotFoundException();
 			}
@@ -186,20 +146,7 @@ public class OrderDAO implements Dao<Order> {
 		return 0;
 	}
 	
-	private int recordDelete(Long id) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Delete')");) {
-			statement.setLong(1, IMS.userLogin.getId());
-			statement.setLong(2, id);
-			statement.execute();
-			return 1;
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		
-		return 0;
-	}
+
 
 	@Override
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {

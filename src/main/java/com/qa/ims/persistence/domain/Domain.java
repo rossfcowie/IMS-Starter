@@ -30,15 +30,16 @@ public enum Domain {
 		for (Domain domain : Domain.values()) {
 			LOGGER.info(domain.getDescription());
 		}
-		break;
 	case 3:
-		//Acceptable domains for a manager to access.
 		break;
 	case 2:
-		//Acceptable domains for a worker to access.
+		LOGGER.info(Domain.ITEM.getDescription());
+		LOGGER.info(Domain.ORDER.getDescription());
 		break;
 	case 1:
-		//Acceptable domains for a customer to access.
+		LOGGER.info(Domain.CUSTOMER.getDescription());
+		LOGGER.info(Domain.ITEM.getDescription());
+		LOGGER.info(Domain.ORDER.getDescription());
 		break;
 	default:
 		break;
@@ -68,14 +69,19 @@ public enum Domain {
 				case 4:
 					return domain;
 				case 3:
-					//Acceptable domains for a manager to access.
-					break;
+					return domain;
 				case 2:
-					//Acceptable domains for a worker to access.
-					break;
+					if(domain.equals(Domain.USER)||domain.equals(Domain.CUSTOMER)) {
+						throw new InsufficientPermissionsException();
+					}else {
+						return domain;
+					}
 				case 1:
-					//Acceptable domains for a customer to access.
-					break;
+					if(domain.equals(Domain.USER)) {
+						throw new InsufficientPermissionsException();
+					}else {
+						return domain;
+					}
 				default:
 					break;
 					}
@@ -88,7 +94,7 @@ public enum Domain {
 				LOGGER.error(e.getMessage());
 			}
 		}
-		return domain;
+		return null;
 	}
 
 }

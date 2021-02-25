@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.IMS;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.persistence.domain.OrderEdit;
 import com.qa.ims.utils.DBUtils;
@@ -46,6 +47,66 @@ public class OrderEditsDAO {
 		System.out.println(finished.toString());
 		
 		return finished;
+	}
+	
+	public Order recordCreate(Order t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Create')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	public Order recordAdd(Order t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Add')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	public Order recordRemove(Order t) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Remove')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, t.getId());
+			statement.execute();
+			return t;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
+		return null;
+	}
+
+	public int recordDelete(Long id) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderEdits(EditorID, OrderID,ChangeType) VALUES (?,?,'Delete')");) {
+			statement.setLong(1, IMS.userLogin.getId());
+			statement.setLong(2, id);
+			statement.execute();
+			return 1;
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
+		return 0;
 	}
 	
 	

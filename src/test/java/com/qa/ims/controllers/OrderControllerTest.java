@@ -14,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.qa.ims.controller.OrderController;
 import com.qa.ims.persistence.dao.OrderDAO;
-import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.dao.OrderEditsDAO;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.Utils;
 
@@ -26,7 +26,10 @@ public class OrderControllerTest {
 
 	@Mock
 	private OrderDAO dao;
-
+	
+	@Mock
+	private OrderEditsDAO edao;
+	
 	@InjectMocks
 	private OrderController controller;
 	
@@ -48,11 +51,12 @@ public class OrderControllerTest {
 
 		Mockito.when(utils.getLong()).thenReturn(CID);
 		Mockito.when(dao.create(created)).thenReturn(created);
-
+		Mockito.when(edao.recordCreate(created)).thenReturn(created);
 		assertEquals(created, controller.create());
 
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(dao, Mockito.times(1)).create(created);
+		Mockito.verify(edao, Mockito.times(1)).recordCreate(created);
 	}
 	
 	@Test
@@ -60,11 +64,13 @@ public class OrderControllerTest {
 		final Long OID = 1L;
 		Mockito.when(utils.getLong()).thenReturn(OID);
 		Mockito.when(dao.delete(OID)).thenReturn(1);
+		Mockito.when(edao.recordDelete(OID)).thenReturn(1);
 
 		assertEquals(1L, controller.delete());
 
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(dao, Mockito.times(1)).delete(OID);
+		Mockito.verify(edao, Mockito.times(1)).recordDelete(OID);
 	}
 	
 	@Test
@@ -77,12 +83,14 @@ public class OrderControllerTest {
 		Mockito.when(this.utils.getLong()).thenReturn(1L,1L);
 		Mockito.when(this.utils.getString()).thenReturn("add");
 		Mockito.when(this.dao.update(added)).thenReturn(added);
+		Mockito.when(edao.recordAdd(added)).thenReturn(added);
 
 		assertEquals(added, this.controller.update());
 
 		Mockito.verify(this.utils, Mockito.times(2)).getLong();
 		Mockito.verify(this.utils, Mockito.times(1)).getString();
 		Mockito.verify(this.dao, Mockito.times(1)).update(added);
+		Mockito.verify(edao, Mockito.times(1)).recordAdd(added);
 	}
 	@Test
 	public void testUpdateAddThenRemove() {	
@@ -91,9 +99,10 @@ public class OrderControllerTest {
 		IIDS.add(IID);
 		final Order added = new Order(OID,IIDS);
 
-		Mockito.when(this.utils.getLong()).thenReturn(OID,IID);
+		Mockito.when(this.utils.getLong()).thenReturn(1L,1L);
 		Mockito.when(this.utils.getString()).thenReturn("add");
 		Mockito.when(this.dao.update(added)).thenReturn(added);
+		Mockito.when(edao.recordAdd(added)).thenReturn(added);
 
 		assertEquals(added, this.controller.update());
 		
@@ -104,12 +113,14 @@ public class OrderControllerTest {
 		Mockito.when(this.utils.getLong()).thenReturn(OID,IID);
 		Mockito.when(this.utils.getString()).thenReturn("remove");
 		Mockito.when(this.dao.update(OID,IIDS)).thenReturn(removed);
+		Mockito.when(edao.recordRemove(removed)).thenReturn(removed);
 
 		assertEquals(removed, this.controller.update());
 
 		Mockito.verify(this.utils, Mockito.times(4)).getLong();
 		Mockito.verify(this.utils, Mockito.times(2)).getString();
 		Mockito.verify(this.dao, Mockito.times(1)).update(OID,IIDS);
+		Mockito.verify(edao, Mockito.times(1)).recordRemove(removed);
 	}
 	
 }
