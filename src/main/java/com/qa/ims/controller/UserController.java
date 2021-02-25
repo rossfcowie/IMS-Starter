@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.IMS;
 import com.qa.ims.persistence.dao.UserDAO;
 import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.persistence.domain.Item;
@@ -45,14 +46,26 @@ public class UserController implements CrudController<User, User>{
 
 	@Override
 	public User update() {
-		LOGGER.info("Please enter the id of the user you would like to update");
-		Long id = utils.getLong();
-		LOGGER.info("Please the new username for this user");
-		String username = utils.getString();
-		LOGGER.info("Please the new password for this user");
-		String password = utils.getString();
-		LOGGER.info("Please enter the level of access for the user");
-		Long permissions = utils.getPermissions();
+		Long id = 0L;
+		String username = "";
+		String password = "";
+		Long permissions = 1L;
+		if(IMS.userLogin.getPermission()==4) {
+			LOGGER.info("Please enter the id of the user you would like to update");
+			id = utils.getLong();
+			LOGGER.info("Please the new username for this user");
+			username = utils.getString();
+			LOGGER.info("Please the new password for this user");
+			password = utils.getString();
+			LOGGER.info("Please enter the level of access for the user");
+			permissions = utils.getPermissions();
+		}else {
+			id = IMS.userLogin.getId();
+			LOGGER.info("Please the new password for this user");
+			username = IMS.userLogin.getUsername();
+			password = utils.getString();
+			permissions = Long.valueOf(IMS.userLogin.getPermission());
+		}
 		User user = userDAO.update(new User(id, username, password,permissions));
 		LOGGER.info("User Updated");
 		return user;

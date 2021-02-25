@@ -13,11 +13,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.IMS;
 import com.qa.ims.exceptions.OrderNotFoundException;
+import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
 public class OrderDAO implements Dao<Order> {
-
+	
+	private CustomerDAO customerDAO = new CustomerDAO();
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
@@ -25,6 +27,22 @@ public class OrderDAO implements Dao<Order> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders group by id");) {
+			List<Order> orders = new ArrayList<>();
+			while (resultSet.next()) {
+				orders.add(modelFromResultSet(resultSet));
+			}
+			return orders;
+		} catch (SQLException e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return new ArrayList<>();
+	}
+	public List<Order> readAsCustomer() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders where CustomerID =" + customerDAO.readFromUser(IMS.userLogin.getId()).getId() +  " group by id");) {
+			
 			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
 				orders.add(modelFromResultSet(resultSet));
@@ -84,8 +102,6 @@ public class OrderDAO implements Dao<Order> {
 		}
 		return null;
 	}
-	
-
 
 	// Add item to order
 	@Override
@@ -135,6 +151,7 @@ public class OrderDAO implements Dao<Order> {
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id = ?");) {
 			statement.setLong(1, id);
 			if(statement.executeUpdate() == 1) {
+				
 				return 1;
 			}else{
 				throw new OrderNotFoundException();
@@ -146,7 +163,27 @@ public class OrderDAO implements Dao<Order> {
 		return 0;
 	}
 	
-
+public boolean checkAcceptableID(Long ID) {
+	try (Connection connection = DBUtils.getInstance().getConnection();
+			PreparedStatement statement = connection
+					.prepareStatement("SELECT id FROM orders WHERE CustomerID = ?");) {
+		statement.setLong(1, customerDAO.readFromUser(IMS.userLogin.getId()).getId());
+		try (ResultSet rs = statement.executeQuery();) {
+			while (rs.next()) {
+				if(rs.getLong("id") == ID) {
+					
+					return true;
+				}
+			}
+			LOGGER.info("This order is not connected to your acocunt.");
+			return false;
+		}
+	} catch (Exception e) {
+		LOGGER.debug(e);
+		LOGGER.error(e.getMessage());
+	}
+	return false;
+}
 
 	@Override
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
