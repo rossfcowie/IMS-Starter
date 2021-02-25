@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,10 +13,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.qa.ims.IMS;
 import com.qa.ims.controller.CustomerController;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.CustomerEditDAO;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.Utils;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +36,11 @@ public class CustomerControllerTest {
 	@InjectMocks
 	private CustomerController controller;
 
+	@Before
+	public void setup() {
+		IMS.userLogin = new User(1L,"admin","admin",4L);
+	}
+	
 	@Test
 	public void testCreate() {
 		final String F_NAME = "barry", L_NAME = "scott";

@@ -51,6 +51,13 @@ public class OrderDAOTest {
 	}
 	
 	@Test
+	public void testReadAsCustomer() {
+		List<Order> expected = new ArrayList<>();
+		expected.add(new Order(1L, 1L, 1L));
+		assertEquals(expected, DAO.readAsCustomer());
+	}
+	
+	@Test
 	public void testReadLatest() {
 		assertEquals(new Order(1L, 1L, 1L), DAO.readLatest());
 	}
@@ -88,6 +95,21 @@ public class OrderDAOTest {
 		assertEquals(cost,DAO.getOrderCost(1L));
 		
 }
+	
+	
+	
+	@Test
+	public void testReadAsCustomereBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		List<Order> expected = new ArrayList<>();
+		assertEquals(expected, DAO.readAsCustomer());
+	}
+	
+	@Test
+	public void testReadLatesteBadSQL() {
+		DBUtils.connect("db.url=jdbc:h2:~/im");
+		assertEquals(null, DAO.readLatest());
+	}
 	
 	@Test
 	public void testCreateBadSQL() {

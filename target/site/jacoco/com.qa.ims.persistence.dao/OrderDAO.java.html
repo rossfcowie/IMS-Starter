@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.persistence.dao</a> &gt; <span class="el_source">OrderDAO.java</span></div><h1>OrderDAO.java</h1><pre class="source lang-java linenums">package com.qa.ims.persistence.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.IMS;
+import com.qa.ims.exceptions.OrderNotFoundException;
+import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.Order;
+import com.qa.ims.utils.DBUtils;
+
+<span class="fc" id="L20">public class OrderDAO implements Dao&lt;Order&gt; {</span>
+	
+<span class="fc" id="L22">	private CustomerDAO customerDAO = new CustomerDAO();</span>
+<span class="fc" id="L23">	public static final Logger LOGGER = LogManager.getLogger();</span>
+
+	@Override
+	public List&lt;Order&gt; readAll() {
+<span class="fc" id="L27">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L28">				Statement statement = connection.createStatement();</span>
+<span class="fc" id="L29">				ResultSet resultSet = statement.executeQuery(&quot;SELECT * FROM orders group by id&quot;);) {</span>
+<span class="fc" id="L30">			List&lt;Order&gt; orders = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">			while (resultSet.next()) {</span>
+<span class="fc" id="L32">				orders.add(modelFromResultSet(resultSet));</span>
+			}
+<span class="fc" id="L34">			return orders;</span>
+<span class="fc" id="L35">		} catch (SQLException e) {</span>
+<span class="fc" id="L36">			LOGGER.debug(e);</span>
+<span class="fc" id="L37">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L39">		return new ArrayList&lt;&gt;();</span>
+	}
+	public List&lt;Order&gt; readAsCustomer() {
+<span class="fc" id="L42">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L43">				Statement statement = connection.createStatement();</span>
+<span class="fc" id="L44">				ResultSet resultSet = statement.executeQuery(&quot;SELECT * FROM orders where CustomerID =&quot; + customerDAO.readFromUser(IMS.userLogin.getId()).getId() +  &quot; group by id&quot;);) {</span>
+			
+<span class="fc" id="L46">			List&lt;Order&gt; orders = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">			while (resultSet.next()) {</span>
+<span class="fc" id="L48">				orders.add(modelFromResultSet(resultSet));</span>
+			}
+<span class="fc" id="L50">			return orders;</span>
+<span class="fc" id="L51">		} catch (SQLException e) {</span>
+<span class="fc" id="L52">			LOGGER.debug(e);</span>
+<span class="fc" id="L53">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L55">		return new ArrayList&lt;&gt;();</span>
+	}
+
+	public Order readLatest() {
+<span class="fc" id="L59">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L60">				Statement statement = connection.createStatement();</span>
+<span class="fc" id="L61">				ResultSet resultSet = statement.executeQuery(&quot;SELECT * FROM orders ORDER BY id DESC LIMIT 1&quot;);) {</span>
+<span class="fc" id="L62">			resultSet.next();</span>
+<span class="fc" id="L63">			return modelFromResultSet(resultSet);</span>
+<span class="fc" id="L64">		} catch (Exception e) {</span>
+<span class="fc" id="L65">			LOGGER.debug(e);</span>
+<span class="fc" id="L66">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L68">		return null;</span>
+	}
+
+	@Override
+	public Order read(Long id) {
+<span class="fc" id="L73">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L74">				PreparedStatement statement = connection.prepareStatement(&quot;SELECT * FROM orders WHERE id = ?&quot;);) {</span>
+<span class="fc" id="L75">			statement.setLong(1, id);</span>
+<span class="fc" id="L76">			try (ResultSet resultSet = statement.executeQuery();) {</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">				if (resultSet.next()) {</span>
+<span class="fc" id="L78">					return modelFromResultSet(resultSet);</span>
+				} else {
+<span class="nc" id="L80">					throw new OrderNotFoundException();</span>
+				}
+			}
+
+<span class="fc" id="L84">		} catch (Exception e) {</span>
+<span class="fc" id="L85">			LOGGER.debug(e);</span>
+<span class="fc" id="L86">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L88">		return null;</span>
+	}
+
+	@Override
+	public Order create(Order t) {
+<span class="fc" id="L93">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L94">				PreparedStatement statement = connection</span>
+<span class="fc" id="L95">						.prepareStatement(&quot;INSERT INTO orders(CustomerID) VALUES (?)&quot;);) {</span>
+<span class="fc" id="L96">			statement.setLong(1, t.getCustomerID());</span>
+<span class="fc" id="L97">			statement.executeUpdate();</span>
+<span class="fc" id="L98">			return readLatest();</span>
+<span class="fc" id="L99">		} catch (Exception e) {</span>
+<span class="fc" id="L100">			LOGGER.debug(e);</span>
+<span class="fc" id="L101">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L103">		return null;</span>
+	}
+
+	// Add item to order
+	@Override
+	public Order update(Order t) {
+<span class="fc" id="L109">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L110">				PreparedStatement statement = connection</span>
+<span class="fc" id="L111">						.prepareStatement(&quot;INSERT INTO orderitems(ItemID,OrderID) VALUES (?,?)&quot;);) {</span>
+<span class="fc" id="L112">			statement.setLong(1, t.getItemIDs().get(0));</span>
+<span class="fc" id="L113">			statement.setLong(2, t.getId());</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">			if(statement.executeUpdate() == 1) {</span>
+<span class="fc" id="L115">				return read(t.getId());</span>
+			}else{
+<span class="nc" id="L117">				throw new OrderNotFoundException();</span>
+			}
+<span class="fc" id="L119">		} catch (Exception e) {</span>
+<span class="fc" id="L120">			LOGGER.debug(e);</span>
+<span class="fc" id="L121">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L123">		return null;</span>
+	}
+	
+
+
+	// Delete item from order
+	public Order update(Long oid, List&lt;Long&gt; itemIDs) {
+<span class="fc" id="L130">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L131">				PreparedStatement statement = connection</span>
+<span class="fc" id="L132">						.prepareStatement(&quot;DELETE FROM orderitems WHERE OrderID = ? and ItemID = ?&quot;);) {</span>
+<span class="fc" id="L133">			statement.setLong(1, oid);</span>
+<span class="fc" id="L134">			statement.setLong(2, itemIDs.get(0));</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">			if(statement.executeUpdate() == 1) {</span>
+<span class="fc" id="L136">				return read(oid);</span>
+			}else{
+<span class="nc" id="L138">				throw new OrderNotFoundException();</span>
+			}
+<span class="fc" id="L140">		} catch (Exception e) {</span>
+<span class="fc" id="L141">			LOGGER.debug(e);</span>
+<span class="fc" id="L142">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L144">		return null;</span>
+	}
+	
+
+	@Override
+	public int delete(long id) {
+<span class="fc" id="L150">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L151">				PreparedStatement statement = connection.prepareStatement(&quot;DELETE FROM orders WHERE id = ?&quot;);) {</span>
+<span class="fc" id="L152">			statement.setLong(1, id);</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">			if(statement.executeUpdate() == 1) {</span>
+				
+<span class="fc" id="L155">				return 1;</span>
+			}else{
+<span class="nc" id="L157">				throw new OrderNotFoundException();</span>
+			}
+<span class="fc" id="L159">		} catch (Exception e) {</span>
+<span class="fc" id="L160">			LOGGER.debug(e);</span>
+<span class="fc" id="L161">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L163">		return 0;</span>
+	}
+	
+public boolean checkAcceptableID(Long ID) {
+<span class="nc" id="L167">	try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="nc" id="L168">			PreparedStatement statement = connection</span>
+<span class="nc" id="L169">					.prepareStatement(&quot;SELECT id FROM orders WHERE CustomerID = ?&quot;);) {</span>
+<span class="nc" id="L170">		statement.setLong(1, customerDAO.readFromUser(IMS.userLogin.getId()).getId());</span>
+<span class="nc" id="L171">		try (ResultSet rs = statement.executeQuery();) {</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">				if(rs.getLong(&quot;id&quot;) == ID) {</span>
+					
+<span class="nc" id="L175">					return true;</span>
+				}
+			}
+<span class="nc" id="L178">			LOGGER.info(&quot;This order is not connected to your acocunt.&quot;);</span>
+<span class="nc" id="L179">			return false;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">		}</span>
+<span class="nc bnc" id="L181" title="All 4 branches missed.">	} catch (Exception e) {</span>
+<span class="nc" id="L182">		LOGGER.debug(e);</span>
+<span class="nc" id="L183">		LOGGER.error(e.getMessage());</span>
+	}
+<span class="nc" id="L185">	return false;</span>
+}
+
+	@Override
+	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
+
+<span class="fc" id="L191">		Long id = resultSet.getLong(&quot;id&quot;);</span>
+<span class="fc" id="L192">		Long customerID = resultSet.getLong(&quot;CustomerID&quot;);</span>
+<span class="fc" id="L193">		Order finished = new Order(id, customerID);</span>
+<span class="fc" id="L194">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L195">				PreparedStatement statement = connection</span>
+<span class="fc" id="L196">						.prepareStatement(&quot;SELECT * FROM orderitems WHERE OrderID = ?&quot;);) {</span>
+<span class="fc" id="L197">			statement.setLong(1, id);</span>
+<span class="fc" id="L198">			try (ResultSet rs = statement.executeQuery();) {</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">				while (rs.next()) {</span>
+<span class="fc" id="L200">					finished.addItemID(rs.getLong(&quot;ItemID&quot;));</span>
+				}
+			}
+<span class="nc" id="L203">		} catch (Exception e) {</span>
+<span class="nc" id="L204">			LOGGER.debug(e);</span>
+<span class="nc" id="L205">			LOGGER.error(e.getMessage());</span>
+<span class="fc" id="L206">		}</span>
+<span class="fc" id="L207">		return finished;</span>
+	}
+
+	public Double getOrderCost(Long id) {
+<span class="fc" id="L211">		try (Connection connection = DBUtils.getInstance().getConnection();</span>
+<span class="fc" id="L212">				PreparedStatement statement = connection.prepareStatement(&quot;\r\n&quot;</span>
+						+ &quot;SELECT sum(items.value) as total from orders JOIN orderItems on orders.id=orderitems.OrderID join items on orderitems.ItemID=items.id where orders.id = ?&quot;);) {
+<span class="fc" id="L214">			statement.setLong(1, id);</span>
+<span class="fc" id="L215">			try (ResultSet resultSet = statement.executeQuery();) {</span>
+<span class="fc" id="L216">				resultSet.next();</span>
+<span class="fc" id="L217">				return resultSet.getDouble(1);</span>
+			}
+<span class="fc" id="L219">		} catch (Exception e) {</span>
+<span class="fc" id="L220">			LOGGER.debug(e);</span>
+<span class="fc" id="L221">			LOGGER.error(e.getMessage());</span>
+		}
+<span class="fc" id="L223">		return 0D;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

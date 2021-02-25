@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.IMS;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.CustomerEditDAO;
 import com.qa.ims.persistence.dao.OrderEditsDAO;
@@ -69,8 +70,15 @@ public class CustomerController implements CrudController<Customer,CustomerEdit>
 	 */
 	@Override
 	public Customer update() {
-		LOGGER.info("Please enter the id of the customer you would like to update");
-		Long id = utils.getLong();
+		Long id = 0L;
+		if(IMS.userLogin.getPermission()==4) {
+			LOGGER.info("Please enter the id of the customer you would like to update");
+			id = utils.getLong();
+			
+		}else {
+			id = customerDAO.readFromUser(IMS.userLogin.getId()).getId();
+		}
+		
 		LOGGER.info("Please enter a first name");
 		String firstName = utils.getString();
 		LOGGER.info("Please enter a surname");

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.qa.ims.controller;
+
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.IMS;
+import com.qa.ims.persistence.dao.UserDAO;
+import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.User;
+import com.qa.ims.utils.Utils;
+
+public class UserController implements CrudController&lt;User, User&gt;{
+
+<span class="fc" id="L17">	public static final Logger LOGGER = LogManager.getLogger();</span>
+
+	private UserDAO userDAO;
+	private Utils utils;
+	
+<span class="fc" id="L22">	public UserController(UserDAO userDAO, Utils utils) {</span>
+<span class="fc" id="L23">		this.userDAO = userDAO;</span>
+<span class="fc" id="L24">		this.utils = utils;</span>
+<span class="fc" id="L25">	}</span>
+
+	@Override
+	public List&lt;User&gt; readAll() {
+<span class="fc" id="L29">		List&lt;User&gt; users = userDAO.readAll();</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">		for (User user : users) {</span>
+<span class="fc" id="L31">			LOGGER.info(user);</span>
+<span class="fc" id="L32">		}</span>
+<span class="fc" id="L33">		return users;</span>
+	}
+
+	@Override
+	public User create() {
+<span class="fc" id="L38">		LOGGER.info(&quot;Please enter the username&quot;);</span>
+<span class="fc" id="L39">		String name = utils.getString();</span>
+<span class="fc" id="L40">		LOGGER.info(&quot;Please enter the permission level&quot;);</span>
+<span class="fc" id="L41">		Long level = utils.getPermissions();</span>
+<span class="fc" id="L42">		User user = userDAO.create(new User(name, level));</span>
+<span class="fc" id="L43">		LOGGER.info(&quot;User&quot; + name + &quot;created, password set to default 'password'&quot;);</span>
+<span class="fc" id="L44">		return user;</span>
+	}
+
+	@Override
+	public User update() {
+<span class="fc" id="L49">		Long id = 0L;</span>
+<span class="fc" id="L50">		String username = &quot;&quot;;</span>
+<span class="fc" id="L51">		String password = &quot;&quot;;</span>
+<span class="fc" id="L52">		Long permissions = 1L;</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+<span class="fc" id="L54">			LOGGER.info(&quot;Please enter the id of the user you would like to update&quot;);</span>
+<span class="fc" id="L55">			id = utils.getLong();</span>
+<span class="fc" id="L56">			LOGGER.info(&quot;Please the new username for this user&quot;);</span>
+<span class="fc" id="L57">			username = utils.getString();</span>
+<span class="fc" id="L58">			LOGGER.info(&quot;Please the new password for this user&quot;);</span>
+<span class="fc" id="L59">			password = utils.getString();</span>
+<span class="fc" id="L60">			LOGGER.info(&quot;Please enter the level of access for the user&quot;);</span>
+<span class="fc" id="L61">			permissions = utils.getPermissions();</span>
+		}else {
+<span class="nc" id="L63">			id = IMS.userLogin.getId();</span>
+<span class="nc" id="L64">			LOGGER.info(&quot;Please the new password for this user&quot;);</span>
+<span class="nc" id="L65">			username = IMS.userLogin.getUsername();</span>
+<span class="nc" id="L66">			password = utils.getString();</span>
+<span class="nc" id="L67">			permissions = Long.valueOf(IMS.userLogin.getPermission());</span>
+		}
+<span class="fc" id="L69">		User user = userDAO.update(new User(id, username, password,permissions));</span>
+<span class="fc" id="L70">		LOGGER.info(&quot;User Updated&quot;);</span>
+<span class="fc" id="L71">		return user;</span>
+	}
+
+	@Override
+	public int delete() {
+<span class="fc" id="L76">		LOGGER.info(&quot;Please enter the id of the user you would like to delete&quot;);</span>
+<span class="fc" id="L77">		Long id = utils.getLong();</span>
+<span class="fc" id="L78">		return userDAO.delete(id);</span>
+	}
+
+	@Override
+	public List&lt;User&gt; readEdits() {
+		// Edits to users are not tracked and therefore this cannot be used
+<span class="nc" id="L84">		LOGGER.info(&quot;It is not possible to track modifications to users. Sorry.&quot;);</span>
+<span class="nc" id="L85">		return null;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

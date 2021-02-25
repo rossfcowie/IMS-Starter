@@ -53,6 +53,7 @@ public class CustomerDAO implements Dao<Customer> {
 		return new ArrayList<>();
 	}
 
+	
 	public Customer readLatest() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
@@ -76,9 +77,6 @@ public class CustomerDAO implements Dao<Customer> {
 		try {
 
 			User u = userDAO.create(new User(customer.getFirstName() + customer.getSurname().substring(0, 2), 1L));
-			if(u ==null) {
-				throw new Exception("Table not recognised");
-			}
 
 			try (Connection connection = DBUtils.getInstance().getConnection();
 					PreparedStatement statement = connection
@@ -102,6 +100,24 @@ public class CustomerDAO implements Dao<Customer> {
 	}
 
 
+	public Customer readFromUser(Long uid) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("SELECT * FROM customers WHERE UserID = ?");) {
+			statement.setLong(1, uid);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				if (resultSet.next()) {
+					return modelFromResultSet(resultSet);
+				} else {
+					throw new CustomerNotFoundException();
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+
 	@Override
 	public Customer read(Long id) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
@@ -120,7 +136,7 @@ public class CustomerDAO implements Dao<Customer> {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Updates a customer in the database
 	 * 
