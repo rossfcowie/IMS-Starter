@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Action.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.controller</a> &gt; <span class="el_source">Action.java</span></div><h1>Action.java</h1><pre class="source lang-java linenums">package com.qa.ims.controller;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.exceptions.InsufficientPermissionsException;
+import com.qa.ims.persistence.domain.Domain;
+import com.qa.ims.utils.Utils;
+
+/**
+ * Action is a collection of commands which are used to determine the type of
+ * function to apply to an entity.
+ *
+ */
+<span class="fc" id="L15">public enum Action {</span>
+<span class="fc" id="L16">	CREATE(&quot;To save a new entity into the database&quot;), READ(&quot;To read an entity from the database&quot;),</span>
+<span class="fc" id="L17">	UPDATE(&quot;To change an entity already in the database&quot;), DELETE(&quot;To remove an entity from the database&quot;),</span>
+<span class="fc" id="L18">	RETURN(&quot;To return to domain selection&quot;), EDITS(&quot;Check all of the recent edits made to this database&quot;);</span>
+
+<span class="fc" id="L20">	public static final Logger LOGGER = LogManager.getLogger();</span>
+
+	private String description;
+
+<span class="fc" id="L24">	Action(String description) {</span>
+<span class="fc" id="L25">		this.description = description;</span>
+<span class="fc" id="L26">	}</span>
+
+	/**
+	 * Describes the action
+	 */
+	public String getDescription() {
+<span class="fc" id="L32">		return this.name() + &quot;: &quot; + this.description;</span>
+	}
+
+	/**
+	 * Prints out all possible actions
+	 */
+	public static void printActions() {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">		for (Action action : Action.values()) {</span>
+<span class="nc" id="L40">			LOGGER.info(action.getDescription());</span>
+		}
+<span class="nc" id="L42">	}</span>
+	
+	public static void printActions(int level, Domain d) {
+<span class="pc bpc" id="L45" title="1 of 5 branches missed.">		switch(level){			</span>
+	case 4:
+<span class="fc bfc" id="L47" title="All 2 branches covered.">		for (Action action : Action.values()) {</span>
+<span class="fc bfc" id="L48" title="All 4 branches covered.">			if(d.equals(Domain.USER) &amp;&amp; action.equals(Action.EDITS)) {</span>
+				
+			}else {
+<span class="fc" id="L51">			LOGGER.info(action.getDescription());</span>
+			}
+		}
+<span class="fc" id="L54">		break;</span>
+	case 3:
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		if(d.equals(Domain.CUSTOMER)) {</span>
+<span class="fc" id="L57">			LOGGER.info(Action.READ.getDescription());</span>
+<span class="fc" id="L58">			LOGGER.info(Action.EDITS.getDescription());</span>
+<span class="fc" id="L59">			LOGGER.info(Action.RETURN.getDescription());</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">		}else if(d.equals(Domain.USER)) {</span>
+<span class="fc" id="L61">			LOGGER.info(Action.READ.getDescription());</span>
+<span class="fc" id="L62">			LOGGER.info(Action.UPDATE.getDescription());</span>
+<span class="fc" id="L63">			LOGGER.info(Action.RETURN.getDescription());</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">		}else if(d.equals(Domain.ORDER)) {</span>
+<span class="fc" id="L65">			LOGGER.info(Action.READ.getDescription());</span>
+<span class="fc" id="L66">			LOGGER.info(Action.DELETE.getDescription());</span>
+<span class="fc" id="L67">			LOGGER.info(Action.RETURN.getDescription());</span>
+		}else {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">			for (Action action : Action.values()) {</span>
+<span class="fc" id="L70">				LOGGER.info(action.getDescription());</span>
+			}
+		}
+<span class="fc" id="L73">		break;</span>
+	case 2:
+<span class="fc bfc" id="L75" title="All 2 branches covered.">		if(d.equals(Domain.ORDER)) {</span>
+<span class="fc" id="L76">			LOGGER.info(Action.READ.getDescription());</span>
+<span class="fc" id="L77">			LOGGER.info(Action.RETURN.getDescription());</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">		}else if(d.equals(Domain.ITEM)) {</span>
+<span class="fc" id="L79">			LOGGER.info(Action.READ.getDescription());</span>
+<span class="fc" id="L80">			LOGGER.info(Action.RETURN.getDescription());</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">		}else if(d.equals(Domain.USER)) {</span>
+<span class="fc" id="L82">			LOGGER.info(Action.UPDATE.getDescription());</span>
+<span class="fc" id="L83">			LOGGER.info(Action.RETURN.getDescription());</span>
+		}
+		break;
+	case 1:
+		
+<span class="fc bfc" id="L88" title="All 2 branches covered.">		if(d.equals(Domain.ORDER)) {</span>
+<span class="fc" id="L89">			LOGGER.info(Action.CREATE.getDescription());</span>
+<span class="fc" id="L90">			LOGGER.info(Action.READ.getDescription());</span>
+<span class="fc" id="L91">			LOGGER.info(Action.UPDATE.getDescription());</span>
+<span class="fc" id="L92">			LOGGER.info(Action.DELETE.getDescription());</span>
+<span class="fc" id="L93">			LOGGER.info(Action.RETURN.getDescription());</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">		}else if(d.equals(Domain.CUSTOMER)) {</span>
+<span class="fc" id="L95">			LOGGER.info(Action.UPDATE.getDescription());</span>
+<span class="fc" id="L96">			LOGGER.info(Action.RETURN.getDescription());</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">		}else if(d.equals(Domain.ITEM)) {</span>
+<span class="fc" id="L98">			LOGGER.info(Action.READ.getDescription());</span>
+<span class="fc" id="L99">			LOGGER.info(Action.RETURN.getDescription());</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">		}else if(d.equals(Domain.USER)) {</span>
+<span class="fc" id="L101">			LOGGER.info(Action.UPDATE.getDescription());</span>
+<span class="fc" id="L102">			LOGGER.info(Action.RETURN.getDescription());</span>
+		}
+
+		break;
+	default:
+		break;
+		}
+		
+		
+<span class="fc" id="L111">	}</span>
+
+	/**
+	 * Gets an action based on a users input. If user enters a non-specified
+	 * enumeration, it will ask for another input.
+	 * 
+	 * @return Action type
+	 */
+	public static Action getAction(Utils utils) {
+<span class="fc" id="L120">		Action action = null;</span>
+		do {
+			try {
+<span class="fc" id="L123">				action = Action.valueOf(utils.getString().toUpperCase());</span>
+<span class="nc" id="L124">			} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L125">				LOGGER.error(&quot;Invalid selection please try again&quot;);</span>
+<span class="fc" id="L126">			}</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">		} while (action == null);</span>
+<span class="fc" id="L128">		return action;</span>
+	}
+
+	
+	
+	public static Action getAction(Utils utils,int level, Domain d) {
+<span class="fc" id="L134">		Action action = null;</span>
+		while (true) {
+			try {
+<span class="fc" id="L137">				action = Action.valueOf(utils.getString().toUpperCase());</span>
+				
+<span class="pc bpc" id="L139" title="1 of 5 branches missed.">				switch(level){</span>
+				
+				case 4:
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">					switch(d){</span>
+					case CUSTOMER:
+					case USER:
+					case ITEM:
+					case ORDER:
+<span class="fc" id="L147">						return action;</span>
+					default:
+<span class="nc" id="L149">						throw new InsufficientPermissionsException();</span>
+					}
+					
+					
+				case 3:
+<span class="pc bpc" id="L154" title="4 of 5 branches missed.">					switch(d){</span>
+					case CUSTOMER:
+<span class="pc bpc" id="L156" title="3 of 4 branches missed.">						if(action.equals(READ)|| action.equals(RETURN)) {</span>
+<span class="fc" id="L157">							return action;</span>
+						}
+						break;
+					case USER:
+<span class="nc bnc" id="L161" title="All 6 branches missed.">						if(action.equals(UPDATE)|| action.equals(READ)|| action.equals(RETURN)) {</span>
+<span class="nc" id="L162">							return action;</span>
+						}
+						break;
+					case ITEM:
+<span class="nc" id="L166">						return action;</span>
+					case ORDER:
+<span class="nc bnc" id="L168" title="All 6 branches missed.">						if(action.equals(DELETE)|| action.equals(READ)|| action.equals(RETURN)) {</span>
+<span class="nc" id="L169">							return action;</span>
+						}
+						break;
+					default:
+						break;
+					
+					}
+<span class="nc" id="L176">					throw new InsufficientPermissionsException();</span>
+				case 2:
+<span class="pc bpc" id="L178" title="4 of 5 branches missed.">					switch(d){</span>
+					case CUSTOMER:
+<span class="nc" id="L180">						throw new InsufficientPermissionsException();</span>
+					case USER:
+<span class="nc bnc" id="L182" title="All 4 branches missed.">						if(action.equals(UPDATE)|| action.equals(RETURN)) {</span>
+<span class="nc" id="L183">							return action;</span>
+						}
+						break;
+					case ITEM:
+<span class="nc bnc" id="L187" title="All 4 branches missed.">						if(action.equals(READ)|| action.equals(RETURN)) {</span>
+<span class="nc" id="L188">							return action;</span>
+						}
+						break;
+					case ORDER:
+<span class="pc bpc" id="L192" title="3 of 4 branches missed.">						if(action.equals(READ)|| action.equals(RETURN)) {</span>
+<span class="fc" id="L193">							return action;</span>
+						}
+						break;
+					default:
+<span class="nc" id="L197">						throw new InsufficientPermissionsException();</span>
+					}
+				case 1:
+<span class="pc bpc" id="L200" title="4 of 5 branches missed.">					switch(d){</span>
+					case CUSTOMER:
+<span class="nc bnc" id="L202" title="All 4 branches missed.">						if(action.equals(UPDATE)|| action.equals(RETURN)) {</span>
+<span class="nc" id="L203">							return action;</span>
+						}
+						break;
+					case USER:
+<span class="nc bnc" id="L207" title="All 4 branches missed.">						if(action.equals(UPDATE)|| action.equals(RETURN)) {</span>
+<span class="nc" id="L208">							return action;</span>
+						}
+						break;
+					case ITEM:
+<span class="pc bpc" id="L212" title="3 of 4 branches missed.">						if(action.equals(READ)|| action.equals(RETURN)) {</span>
+<span class="fc" id="L213">							return action;</span>
+						}
+						break;
+					case ORDER:
+<span class="nc bnc" id="L217" title="All 2 branches missed.">						if(action.equals(EDITS)) {</span>
+<span class="nc" id="L218">							throw new InsufficientPermissionsException();</span>
+						}else {
+<span class="nc" id="L220">							return action;</span>
+						}
+					default:
+<span class="nc" id="L223">						throw new InsufficientPermissionsException();</span>
+					}
+				default:
+					break;
+					}
+				
+<span class="nc" id="L229">				break;</span>
+<span class="nc" id="L230">			} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L231">				LOGGER.error(&quot;Invalid selection please try again&quot;);</span>
+				
+<span class="nc" id="L233">			}catch(InsufficientPermissionsException e) {</span>
+<span class="nc" id="L234">				LOGGER.error(e.getMessage());</span>
+<span class="nc" id="L235">			}</span>
+		}
+<span class="nc" id="L237">		return null;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

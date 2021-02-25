@@ -62,7 +62,7 @@ public class UserControllerTest {
 
 		Mockito.verify(dao, Mockito.times(1)).readAll();
 	}
-
+	
 	@Test
 	public void testUpdate() {
 		final String UNAME = "barry", PASS = "password";

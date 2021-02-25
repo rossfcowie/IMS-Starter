@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Order.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.persistence.domain</a> &gt; <span class="el_source">Order.java</span></div><h1>Order.java</h1><pre class="source lang-java linenums">package com.qa.ims.persistence.domain;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Order {
+
+	private Long id;
+	private Long customerID;
+	private List&lt;Long&gt; itemIDs;
+<span class="fc" id="L11">	private List&lt;Long&gt; history = new ArrayList&lt;&gt;();</span>
+
+	@Override
+	public String toString() {
+<span class="fc" id="L15">		String str = &quot;}==Order Id:&quot; + id + &quot;=={\ncustomer ID=&quot; + customerID + &quot;\n}=items={\n&quot;;</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">		for (Long item : itemIDs) {</span>
+<span class="fc" id="L17">			str += item + &quot;\n&quot;;</span>
+<span class="fc" id="L18">		}</span>
+<span class="fc" id="L19">		return str + &quot;}===={\n&quot;;</span>
+	}
+
+	public Order(Long id, Long customerID) {
+<span class="fc" id="L23">		super();</span>
+<span class="fc" id="L24">		this.id = id;</span>
+<span class="fc" id="L25">		this.customerID = customerID;</span>
+<span class="fc" id="L26">		this.itemIDs = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L27">	}</span>
+
+	public Order(Long customerID) {
+<span class="fc" id="L30">		super();</span>
+<span class="fc" id="L31">		this.customerID = customerID;</span>
+<span class="fc" id="L32">		this.itemIDs = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L33">	}</span>
+
+	public Order(Long id, Long customerID, List&lt;Long&gt; itemIDs) {
+<span class="fc" id="L36">		super();</span>
+<span class="fc" id="L37">		this.id = id;</span>
+<span class="fc" id="L38">		this.customerID = customerID;</span>
+<span class="fc" id="L39">		this.itemIDs = itemIDs;</span>
+<span class="fc" id="L40">	}</span>
+
+	public Order(Long id, List&lt;Long&gt; itemIDs) {
+<span class="fc" id="L43">		super();</span>
+<span class="fc" id="L44">		this.id = id;</span>
+<span class="fc" id="L45">		this.itemIDs = itemIDs;</span>
+<span class="fc" id="L46">	}</span>
+
+	public Order(Long id, Long customerID, Long itemID) {
+<span class="fc" id="L49">		super();</span>
+<span class="fc" id="L50">		this.id = id;</span>
+<span class="fc" id="L51">		this.customerID = customerID;</span>
+<span class="fc" id="L52">		this.itemIDs = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L53">		this.itemIDs.add(itemID);</span>
+<span class="fc" id="L54">	}</span>
+
+	public Long getId() {
+<span class="fc" id="L57">		return id;</span>
+	}
+
+	public Long getCustomerID() {
+<span class="fc" id="L61">		return customerID;</span>
+	}
+
+	public List&lt;Long&gt; getItemIDs() {
+<span class="fc" id="L65">		return itemIDs;</span>
+	}
+
+	public void setId(Long id) {
+<span class="nc" id="L69">		this.id = id;</span>
+<span class="nc" id="L70">	}</span>
+
+	public void setCustomerID(Long customerID) {
+<span class="nc" id="L73">		this.customerID = customerID;</span>
+<span class="nc" id="L74">	}</span>
+
+	public void setItemIDs(List&lt;Long&gt; itemIDs) {
+<span class="nc" id="L77">		this.itemIDs = itemIDs;</span>
+<span class="nc" id="L78">	}</span>
+
+	public void addItemID(Long itemID) {
+<span class="fc" id="L81">		this.itemIDs.add(itemID);</span>
+<span class="fc" id="L82">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="fc" id="L86">		final int prime = 31;</span>
+<span class="fc" id="L87">		int result = 1;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">		result = prime * result + ((customerID == null) ? 0 : customerID.hashCode());</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">		result = prime * result + ((history == null) ? 0 : history.hashCode());</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">		result = prime * result + ((id == null) ? 0 : id.hashCode());</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">		result = prime * result + ((itemIDs == null) ? 0 : itemIDs.hashCode());</span>
+<span class="fc" id="L92">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">		if (this == obj)</span>
+<span class="fc" id="L98">			return true;</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">		if (obj == null)</span>
+<span class="fc" id="L100">			return false;</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">		if (getClass() != obj.getClass())</span>
+<span class="fc" id="L102">			return false;</span>
+<span class="fc" id="L103">		Order other = (Order) obj;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">		if (customerID == null) {</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">			if (other.customerID != null)</span>
+<span class="fc" id="L106">				return false;</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">		} else if (!customerID.equals(other.customerID))</span>
+<span class="fc" id="L108">			return false;</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">		if (history == null) {</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">			if (other.history != null)</span>
+<span class="fc" id="L111">				return false;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		} else if (!history.equals(other.history))</span>
+<span class="fc" id="L113">			return false;</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">		if (id == null) {</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">			if (other.id != null)</span>
+<span class="fc" id="L116">				return false;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">		} else if (!id.equals(other.id))</span>
+<span class="fc" id="L118">			return false;</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">		if (itemIDs == null) {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">			if (other.itemIDs != null)</span>
+<span class="fc" id="L121">				return false;</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">		} else if (other.itemIDs != null) {</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">			if (!itemIDs.containsAll(other.itemIDs)) {</span>
+<span class="fc" id="L124">				return false;</span>
+			}
+		}
+<span class="fc" id="L127">		return true;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

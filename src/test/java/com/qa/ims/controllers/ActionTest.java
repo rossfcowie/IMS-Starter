@@ -55,7 +55,6 @@ public class ActionTest {
 			assertEquals(Action.CREATE,action);
 		}
 		}
-
 		Mockito.verify(utils, Mockito.times(4)).getString();
 	}
 	
@@ -78,7 +77,7 @@ public class ActionTest {
 	@Test
 	public void testGetActionCustomer() {
 		Mockito.when(utils.getString()).thenReturn("Read");
-		action = Action.getAction(utils,2,Domain.ITEM);
+		action = Action.getAction(utils,1,Domain.ITEM);
 		assertEquals(Action.READ,action);
 		Mockito.verify(utils, Mockito.times(1)).getString();
 	}
