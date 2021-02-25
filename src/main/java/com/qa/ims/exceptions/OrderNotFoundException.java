@@ -5,7 +5,7 @@ public class OrderNotFoundException extends RuntimeException {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1319030538360418255L;
+	private static final long serialVersionUID = 5091831206775243253L;
 	
 	public String getMessage() {
 		return "No order could be found with the requested parameters.";

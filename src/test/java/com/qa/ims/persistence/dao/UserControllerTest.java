@@ -1,10 +1,11 @@
-package com.qa.ims.controllers;
+package com.qa.ims.persistence.dao;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,84 +13,88 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.qa.ims.controller.CustomerController;
-import com.qa.ims.persistence.dao.CustomerDAO;
-import com.qa.ims.persistence.dao.CustomerEditDAO;
+import com.qa.ims.controller.UserController;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.Utils;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CustomerControllerTest {
+public class UserControllerTest {
 
 	@Mock
 	private Utils utils;
 
 	@Mock
-	private CustomerDAO dao;
-	
-	@Mock
-	private CustomerEditDAO edao;
-	
-	@InjectMocks
-	private CustomerController controller;
+	private UserDAO dao;
 
+
+	@InjectMocks
+	private UserController controller;
+	
+	
 	@Test
 	public void testCreate() {
-		final String F_NAME = "barry", L_NAME = "scott";
-		final Customer created = new Customer(F_NAME, L_NAME);
+		final String UNAME = "barry";
+		final Long PER = 1L;
+		final User created = new User(UNAME,PER);
 
-		Mockito.when(utils.getString()).thenReturn(F_NAME, L_NAME);
+		Mockito.when(utils.getString()).thenReturn(UNAME);
+		Mockito.when(utils.getPermissions()).thenReturn(PER);
 		Mockito.when(dao.create(created)).thenReturn(created);
-		Mockito.when(edao.recordCreate(created)).thenReturn(created);
+		
 		assertEquals(created, controller.create());
-
-		Mockito.verify(utils, Mockito.times(2)).getString();
+		
+		Mockito.verify(utils, Mockito.times(1)).getPermissions();
+		Mockito.verify(utils, Mockito.times(1)).getString();
 		Mockito.verify(dao, Mockito.times(1)).create(created);
-		Mockito.verify(this.edao, Mockito.times(1)).recordCreate(created);
 	}
 
 	@Test
 	public void testReadAll() {
-		List<Customer> customers = new ArrayList<>();
-		customers.add(new Customer(1L, "jordan", "harrison"));
+		final String UNAME = "barry";
+		final Long PER = 1L;
+		List<User> users = new ArrayList<>();
+		users.add(new User(UNAME,PER));
 
-		Mockito.when(dao.readAll()).thenReturn(customers);
+		Mockito.when(dao.readAll()).thenReturn(users);
 
-		assertEquals(customers, controller.readAll());
+		assertEquals(users, controller.readAll());
 
 		Mockito.verify(dao, Mockito.times(1)).readAll();
 	}
 
 	@Test
 	public void testUpdate() {
-		Customer updated = new Customer(1L, "chris", "perrins");
+		final String UNAME = "barry", PASS = "password";
+		final Long PER = 1L, ID = 1L;
+		final User updated = new User(ID,UNAME,PASS,PER);
 
-		Mockito.when(this.utils.getLong()).thenReturn(1L);
-		Mockito.when(this.utils.getString()).thenReturn(updated.getFirstName(), updated.getSurname());
+		Mockito.when(this.utils.getLong()).thenReturn(ID);
+		Mockito.when(this.utils.getString()).thenReturn(UNAME, PASS);
 		Mockito.when(this.dao.update(updated)).thenReturn(updated);
-		Mockito.when(edao.recordUpdate(updated)).thenReturn(updated);
+		Mockito.when(utils.getPermissions()).thenReturn(PER);
 
 		assertEquals(updated, this.controller.update());
 
 		Mockito.verify(this.utils, Mockito.times(1)).getLong();
 		Mockito.verify(this.utils, Mockito.times(2)).getString();
+		Mockito.verify(utils, Mockito.times(1)).getPermissions();
 		Mockito.verify(this.dao, Mockito.times(1)).update(updated);
-		Mockito.verify(this.edao, Mockito.times(1)).recordUpdate(updated);
 	}
-
+	
 	@Test
 	public void testDelete() {
 		final long ID = 1L;
 
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(dao.delete(ID)).thenReturn(1);
-		Mockito.when(edao.recordDelete(ID)).thenReturn(1);
 
 		assertEquals(1L, this.controller.delete());
 
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(dao, Mockito.times(1)).delete(ID);
-		Mockito.verify(this.edao, Mockito.times(1)).recordDelete(ID);
 	}
+	
+	
 
 }

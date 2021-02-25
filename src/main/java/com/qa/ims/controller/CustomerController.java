@@ -6,24 +6,36 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.CustomerEditDAO;
+import com.qa.ims.persistence.dao.OrderEditsDAO;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.CustomerEdit;
+import com.qa.ims.persistence.domain.OrderEdit;
 import com.qa.ims.utils.Utils;
 
 /**
  * Takes in customer details for CRUD functionality
  *
  */
-public class CustomerController implements CrudController<Customer> {
+public class CustomerController implements CrudController<Customer,CustomerEdit> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	private CustomerDAO customerDAO;
+	private CustomerEditDAO customerEDAO;
 	private Utils utils;
 
 	public CustomerController(CustomerDAO customerDAO, Utils utils) {
 		super();
 		this.customerDAO = customerDAO;
 		this.utils = utils;
+	}
+
+	public CustomerController(CustomerDAO custDAO, Utils utils, CustomerEditDAO customerEDAO) {
+		super();
+		this.customerDAO = custDAO;
+		this.utils = utils;
+		this.customerEDAO = customerEDAO;
 	}
 
 	/**
@@ -49,7 +61,7 @@ public class CustomerController implements CrudController<Customer> {
 		String surname = utils.getString();
 		Customer customer = customerDAO.create(new Customer(firstName, surname));
 		LOGGER.info("Customer created");
-		return customer;
+		return customerEDAO.recordCreate(customer);
 	}
 
 	/**
@@ -65,7 +77,7 @@ public class CustomerController implements CrudController<Customer> {
 		String surname = utils.getString();
 		Customer customer = customerDAO.update(new Customer(id, firstName, surname));
 		LOGGER.info("Customer Updated");
-		return customer;
+		return customerEDAO.recordUpdate(customer);
 	}
 
 	/**
@@ -77,7 +89,16 @@ public class CustomerController implements CrudController<Customer> {
 	public int delete() {
 		LOGGER.info("Please enter the id of the customer you would like to delete");
 		Long id = utils.getLong();
-		return customerDAO.delete(id);
+		return customerEDAO.recordDelete(Long.valueOf(customerDAO.delete(id)));
+	}
+
+	@Override
+	public List<CustomerEdit> readEdits() {
+		List<CustomerEdit> changes = customerEDAO.readAll();
+		for (CustomerEdit change : changes) {
+			LOGGER.info(change);
+		}
+		return changes;
 	}
 
 }

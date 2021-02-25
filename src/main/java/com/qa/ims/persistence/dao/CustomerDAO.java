@@ -11,13 +11,17 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.IMS;
 import com.qa.ims.exceptions.CustomerNotFoundException;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.User;
 import com.qa.ims.utils.DBUtils;
 
 public class CustomerDAO implements Dao<Customer> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
+	public UserDAO userDAO = new UserDAO();
 
 	@Override
 	public Customer modelFromResultSet(ResultSet resultSet) throws SQLException {
@@ -69,13 +73,27 @@ public class CustomerDAO implements Dao<Customer> {
 	 */
 	@Override
 	public Customer create(Customer customer) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection
-						.prepareStatement("INSERT INTO customers(first_name, surname) VALUES (?, ?)");) {
-			statement.setString(1, customer.getFirstName());
-			statement.setString(2, customer.getSurname());
-			statement.executeUpdate();
-			return readLatest();
+		try {
+
+			User u = userDAO.create(new User(customer.getFirstName() + customer.getSurname().substring(0, 2), 1L));
+			if(u ==null) {
+				throw new Exception("Table not recognised");
+			}
+
+			try (Connection connection = DBUtils.getInstance().getConnection();
+					PreparedStatement statement = connection
+							.prepareStatement("INSERT INTO customers(first_name, surname,UserID) VALUES (?, ?,?)");) {
+				statement.setString(1, customer.getFirstName());
+				statement.setString(2, customer.getSurname());
+				statement.setLong(3, u.getId());
+				statement.executeUpdate();
+				statement.close();
+				return readLatest();
+			} catch (Exception e) {
+				LOGGER.debug(e);
+				LOGGER.error(e.getMessage());
+			}
+			return null;
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -83,15 +101,16 @@ public class CustomerDAO implements Dao<Customer> {
 		return null;
 	}
 
+
 	@Override
 	public Customer read(Long id) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("SELECT * FROM customers WHERE id = ?");) {
 			statement.setLong(1, id);
 			try (ResultSet resultSet = statement.executeQuery();) {
-				if(resultSet.next()) {
+				if (resultSet.next()) {
 					return modelFromResultSet(resultSet);
-				}else{
+				} else {
 					throw new CustomerNotFoundException();
 				}
 			}
@@ -117,18 +136,20 @@ public class CustomerDAO implements Dao<Customer> {
 			statement.setString(1, customer.getFirstName());
 			statement.setString(2, customer.getSurname());
 			statement.setLong(3, customer.getId());
-			if(statement.executeUpdate() == 1) {
+			if (statement.executeUpdate() == 1) {
 				return read(customer.getId());
-			}else{
+			} else {
 				throw new CustomerNotFoundException();
 			}
-			
+
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
 		return null;
 	}
+	
+
 
 	/**
 	 * Deletes a customer in the database
@@ -140,9 +161,9 @@ public class CustomerDAO implements Dao<Customer> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM customers WHERE id = ?");) {
 			statement.setLong(1, id);
-			if(statement.executeUpdate() == 1) {
+			if (statement.executeUpdate() == 1) {
 				return 1;
-			}else{
+			} else {
 				throw new CustomerNotFoundException();
 			}
 		} catch (Exception e) {
@@ -152,4 +173,7 @@ public class CustomerDAO implements Dao<Customer> {
 		return 0;
 	}
 
+
+	
+	
 }
