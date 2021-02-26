@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.controller</a> &gt; <span class="el_source">CustomerController.java</span></div><h1>CustomerController.java</h1><pre class="source lang-java linenums">package com.qa.ims.controller;
+
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.IMS;
+import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.CustomerEditDAO;
+import com.qa.ims.persistence.dao.OrderEditsDAO;
+import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.CustomerEdit;
+import com.qa.ims.persistence.domain.OrderEdit;
+import com.qa.ims.utils.Utils;
+
+/**
+ * Takes in customer details for CRUD functionality
+ *
+ */
+public class CustomerController implements CrudController&lt;Customer,CustomerEdit&gt; {
+
+<span class="fc" id="L23">	public static final Logger LOGGER = LogManager.getLogger();</span>
+
+	private CustomerDAO customerDAO;
+	private CustomerEditDAO customerEDAO;
+	private Utils utils;
+
+	public CustomerController(CustomerDAO customerDAO, Utils utils) {
+<span class="nc" id="L30">		super();</span>
+<span class="nc" id="L31">		this.customerDAO = customerDAO;</span>
+<span class="nc" id="L32">		this.utils = utils;</span>
+<span class="nc" id="L33">	}</span>
+
+	public CustomerController(CustomerDAO custDAO, Utils utils, CustomerEditDAO customerEDAO) {
+<span class="fc" id="L36">		super();</span>
+<span class="fc" id="L37">		this.customerDAO = custDAO;</span>
+<span class="fc" id="L38">		this.utils = utils;</span>
+<span class="fc" id="L39">		this.customerEDAO = customerEDAO;</span>
+<span class="fc" id="L40">	}</span>
+
+	/**
+	 * Reads all customers to the logger
+	 */
+	@Override
+	public List&lt;Customer&gt; readAll() {
+<span class="fc" id="L47">		List&lt;Customer&gt; customers = customerDAO.readAll();</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		for (Customer customer : customers) {</span>
+<span class="fc" id="L49">			LOGGER.info(customer);</span>
+<span class="fc" id="L50">		}</span>
+<span class="fc" id="L51">		return customers;</span>
+	}
+
+	/**
+	 * Creates a customer by taking in user input
+	 */
+	@Override
+	public Customer create() {
+<span class="fc" id="L59">		LOGGER.info(&quot;Please enter a first name&quot;);</span>
+<span class="fc" id="L60">		String firstName = utils.getString();</span>
+<span class="fc" id="L61">		LOGGER.info(&quot;Please enter a surname&quot;);</span>
+<span class="fc" id="L62">		String surname = utils.getString();</span>
+<span class="fc" id="L63">		Customer customer = customerDAO.create(new Customer(firstName, surname));</span>
+<span class="fc" id="L64">		LOGGER.info(&quot;Customer created&quot;);</span>
+<span class="fc" id="L65">		return customerEDAO.recordCreate(customer);</span>
+	}
+
+	/**
+	 * Updates an existing customer by taking in user input
+	 */
+	@Override
+	public Customer update() {
+<span class="fc" id="L73">		Long id = 0L;</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+<span class="fc" id="L75">			LOGGER.info(&quot;Please enter the id of the customer you would like to update&quot;);</span>
+<span class="fc" id="L76">			id = utils.getLong();</span>
+			
+		}else {
+<span class="nc" id="L79">			id = customerDAO.readFromUser(IMS.userLogin.getId()).getId();</span>
+		}
+		
+<span class="fc" id="L82">		LOGGER.info(&quot;Please enter a first name&quot;);</span>
+<span class="fc" id="L83">		String firstName = utils.getString();</span>
+<span class="fc" id="L84">		LOGGER.info(&quot;Please enter a surname&quot;);</span>
+<span class="fc" id="L85">		String surname = utils.getString();</span>
+<span class="fc" id="L86">		Customer customer = customerDAO.update(new Customer(id, firstName, surname));</span>
+<span class="fc" id="L87">		LOGGER.info(&quot;Customer Updated&quot;);</span>
+<span class="fc" id="L88">		return customerEDAO.recordUpdate(customer);</span>
+	}
+
+	/**
+	 * Deletes an existing customer by the id of the customer
+	 * 
+	 * @return
+	 */
+	@Override
+	public int delete() {
+<span class="fc" id="L98">		LOGGER.info(&quot;Please enter the id of the customer you would like to delete&quot;);</span>
+<span class="fc" id="L99">		Long id = utils.getLong();</span>
+<span class="fc" id="L100">		return customerEDAO.recordDelete(Long.valueOf(customerDAO.delete(id)));</span>
+	}
+
+	@Override
+	public List&lt;CustomerEdit&gt; readEdits() {
+<span class="nc" id="L105">		List&lt;CustomerEdit&gt; changes = customerEDAO.readAll();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">		for (CustomerEdit change : changes) {</span>
+<span class="nc" id="L107">			LOGGER.info(change);</span>
+<span class="nc" id="L108">		}</span>
+<span class="nc" id="L109">		return changes;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

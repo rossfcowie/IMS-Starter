@@ -6,20 +6,29 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.ItemDAO;
-import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.dao.ItemEditDAO;
 import com.qa.ims.persistence.domain.Item;
+import com.qa.ims.persistence.domain.ItemEdit;
 import com.qa.ims.utils.Utils;
 
-public class ItemController implements CrudController<Item> {
+public class ItemController implements CrudController<Item,ItemEdit> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	private ItemDAO itemDAO;
+	private ItemEditDAO itemEDAO;
 	private Utils utils;
 	
 	public ItemController(ItemDAO itemDAO, Utils utils) {
 		super();
 		this.itemDAO = itemDAO;
+		this.utils = utils;
+	}
+
+	public ItemController(ItemDAO itemDAO, Utils utils, ItemEditDAO itemEDAO) {
+		super();
+		this.itemDAO = itemDAO;
+		this.itemEDAO = itemEDAO;
 		this.utils = utils;
 	}
 
@@ -40,7 +49,7 @@ public class ItemController implements CrudController<Item> {
 		Double value = utils.getDouble();
 		Item item = itemDAO.create(new Item(name, value));
 		LOGGER.info("Item created");
-		return item;
+		return itemEDAO.recordCreate(item);
 	}
 
 	@Override
@@ -52,14 +61,23 @@ public class ItemController implements CrudController<Item> {
 		LOGGER.info("Please enter the item's new value");
 		Double value = utils.getDouble();
 		Item item = itemDAO.update(new Item(id,name, value));
-		return item;
+		return  itemEDAO.recordUpdate(item);
 	}
 
 	@Override
 	public int delete() {
 		LOGGER.info("Please enter the id of the item you wish to delete.");
 		Long id = utils.getLong();
-		return itemDAO.delete(id);
+		return itemEDAO.recordDelete(Long.valueOf(itemDAO.delete(id)));
+	}
+
+	@Override
+	public List<ItemEdit> readEdits() {
+		List<ItemEdit> changes = itemEDAO.readAll();
+		for (ItemEdit change : changes) {
+			LOGGER.info(change);
+		}
+		return changes;
 	}
 
 }

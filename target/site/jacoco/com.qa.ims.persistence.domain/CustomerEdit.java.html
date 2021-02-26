@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerEdit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.persistence.domain</a> &gt; <span class="el_source">CustomerEdit.java</span></div><h1>CustomerEdit.java</h1><pre class="source lang-java linenums">package com.qa.ims.persistence.domain;
+
+public class CustomerEdit extends Edit {
+	private Long CustomerID;
+
+	
+	
+	@Override
+	public String toString() {
+<span class="nc" id="L10">		return &quot;CustomerEdit [CustomerID=&quot; + CustomerID + &quot;,&quot; + super.toString();</span>
+	}
+
+	public CustomerEdit(String editor, String change, Long customerID) {
+<span class="fc" id="L14">		super(editor, change);</span>
+<span class="fc" id="L15">		CustomerID = customerID;</span>
+<span class="fc" id="L16">	}</span>
+
+	public Long getCustomerID() {
+<span class="nc" id="L19">		return CustomerID;</span>
+	}
+
+	public void setCustomerID(Long customerID) {
+<span class="nc" id="L23">		CustomerID = customerID;</span>
+<span class="nc" id="L24">	}</span>
+
+	@Override
+	public int hashCode() {
+<span class="fc" id="L28">		final int prime = 31;</span>
+<span class="fc" id="L29">		int result = super.hashCode();</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">		result = prime * result + ((CustomerID == null) ? 0 : CustomerID.hashCode());</span>
+<span class="fc" id="L31">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		if (this == obj)</span>
+<span class="fc" id="L37">			return true;</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">		if (!super.equals(obj))</span>
+<span class="fc" id="L39">			return false;</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L41">			return false;</span>
+<span class="fc" id="L42">		CustomerEdit other = (CustomerEdit) obj;</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">		if (CustomerID == null) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">			if (other.CustomerID != null)</span>
+<span class="fc" id="L45">				return false;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">		} else if (!CustomerID.equals(other.CustomerID))</span>
+<span class="fc" id="L47">			return false;</span>
+<span class="fc" id="L48">		return true;</span>
+	}
+
+
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

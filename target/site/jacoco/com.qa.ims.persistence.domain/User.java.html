@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.persistence.domain</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package com.qa.ims.persistence.domain;
+
+public class User {
+	private Long id;
+	private String username;
+	private String password;
+	private Long permission;
+	
+	
+<span class="fc" id="L10">	public User(Long id, String username, String password, Long permission) {</span>
+<span class="fc" id="L11">		this.id = id;</span>
+<span class="fc" id="L12">		this.username = username;</span>
+<span class="fc" id="L13">		this.password = password;</span>
+<span class="fc" id="L14">		this.permission = permission;</span>
+<span class="fc" id="L15">	}</span>
+<span class="fc" id="L16">	public User(String username, Long permission) {</span>
+<span class="fc" id="L17">		this.username = username;</span>
+<span class="fc" id="L18">		this.password = &quot;password&quot;;</span>
+<span class="fc" id="L19">		this.permission = permission;</span>
+<span class="fc" id="L20">	}</span>
+
+
+	@Override
+	public String toString() {
+<span class="fc" id="L25">		return username +  &quot;(ID:&quot; + id + &quot;)&quot; + &quot;(&quot; +getLevel()+ &quot;)&quot;+ &quot;\npassword=&quot; + password;</span>
+	}
+	public Long getId() {
+<span class="fc" id="L28">		return id;</span>
+	}
+
+	public String getUsername() {
+<span class="fc" id="L32">		return username;</span>
+	}
+	public String getPassword() {
+<span class="fc" id="L35">		return password;</span>
+	}
+	public boolean comparePassword(String password) {
+<span class="nc bnc" id="L38" title="All 2 branches missed.">		return this.password==password;</span>
+	}
+
+	public int getPermission() {
+<span class="fc" id="L42">		return Integer.parseInt(Long.toString(permission)) ;</span>
+	}
+
+
+	
+	public String getLevel() {
+<span class="pc bpc" id="L48" title="4 of 5 branches missed.">		switch(this.getPermission()){</span>
+		
+	case 4:
+<span class="nc" id="L51">		return &quot;System Admin&quot;;</span>
+	case 3:
+<span class="nc" id="L53">		return &quot;Manager&quot;;</span>
+	case 2:
+<span class="nc" id="L55">		return &quot;Worker&quot;;</span>
+	case 1:
+<span class="fc" id="L57">		return &quot;Customer&quot;;</span>
+	default:
+<span class="nc" id="L59">		return &quot;Error, permission level not acceptable&quot;;</span>
+		}
+	}
+	public void setId(Long id) {
+<span class="nc" id="L63">		this.id = id;</span>
+<span class="nc" id="L64">	}</span>
+
+	public void setUsername(String username) {
+<span class="nc" id="L67">		this.username = username;</span>
+<span class="nc" id="L68">	}</span>
+
+	public void setPassword(String password) {
+<span class="nc" id="L71">		this.password = password;</span>
+<span class="nc" id="L72">	}</span>
+
+	public void setPermission(Long permission) {
+<span class="nc" id="L75">		this.permission = permission;</span>
+<span class="nc" id="L76">	}</span>
+
+
+	@Override
+	public int hashCode() {
+<span class="fc" id="L81">		final int prime = 31;</span>
+<span class="fc" id="L82">		int result = 1;</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">		result = prime * result + ((id == null) ? 0 : id.hashCode());</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">		result = prime * result + ((password == null) ? 0 : password.hashCode());</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">		result = prime * result + ((permission == null) ? 0 : permission.hashCode());</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">		result = prime * result + ((username == null) ? 0 : username.hashCode());</span>
+<span class="fc" id="L87">		return result;</span>
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">		if (this == obj)</span>
+<span class="fc" id="L94">			return true;</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">		if (obj == null)</span>
+<span class="fc" id="L96">			return false;</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">		if (getClass() != obj.getClass())</span>
+<span class="fc" id="L98">			return false;</span>
+<span class="fc" id="L99">		User other = (User) obj;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">		if (id == null) {</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">			if (other.id != null)</span>
+<span class="fc" id="L102">				return false;</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">		} else if (!id.equals(other.id))</span>
+<span class="fc" id="L104">			return false;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">		if (password == null) {</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">			if (other.password != null)</span>
+<span class="fc" id="L107">				return false;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">		} else if (!password.equals(other.password))</span>
+<span class="fc" id="L109">			return false;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">		if (permission == null) {</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">			if (other.permission != null)</span>
+<span class="fc" id="L112">				return false;</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">		} else if (!permission.equals(other.permission))</span>
+<span class="fc" id="L114">			return false;</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">		if (username == null) {</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">			if (other.username != null)</span>
+<span class="fc" id="L117">				return false;</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">		} else if (!username.equals(other.username))</span>
+<span class="fc" id="L119">			return false;</span>
+<span class="fc" id="L120">		return true;</span>
+	}
+	
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
