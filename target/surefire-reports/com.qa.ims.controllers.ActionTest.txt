@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.qa.ims.controllers.ActionTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.304 sec
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.204 sec

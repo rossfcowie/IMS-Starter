@@ -52,7 +52,7 @@ public class IMS {
 	public void imsSystem() {
 <span class="nc" id="L53">		LOGGER.info(&quot;Welcome to the Inventory Management System!&quot;);</span>
 <span class="nc" id="L54">		DBUtils.connect();</span>
-<span class="nc" id="L55">		DBUtils.getInstance().init(&quot;src/test/resources/sql-schema.sql&quot;, &quot;src/test/resources/sql-data.sql&quot;);</span>
+<span class="nc" id="L55">		DBUtils.getInstance().init(&quot;src/main/resources/sql-schema.sql&quot;, &quot;src/main/resources/sql-data.sql&quot;);</span>
 		do {
 <span class="nc" id="L57">			LOGGER.info(&quot;Please enter your username.&quot;);</span>
 <span class="nc" id="L58">			String username = utils.getString();</span>
