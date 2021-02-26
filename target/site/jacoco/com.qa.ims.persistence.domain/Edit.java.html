@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Edit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.persistence.domain</a> &gt; <span class="el_source">Edit.java</span></div><h1>Edit.java</h1><pre class="source lang-java linenums">package com.qa.ims.persistence.domain;
+
+public class Edit {
+
+	private String Editor;
+	private String Change;
+	
+	
+
+	@Override
+	public String toString() {
+<span class="fc" id="L12">		return &quot;Editor=&quot; + Editor + &quot;, Change=&quot; + Change + &quot;]&quot;;</span>
+	}
+<span class="fc" id="L14">	public Edit(String editor, String change) {</span>
+<span class="fc" id="L15">		Editor = editor;</span>
+<span class="fc" id="L16">		Change = change;</span>
+<span class="fc" id="L17">	}</span>
+	public String getChange() {
+<span class="nc" id="L19">		return Change;</span>
+	}
+	public void setChange(String change) {
+<span class="nc" id="L22">		Change = change;</span>
+<span class="nc" id="L23">	}</span>
+	public String getEditor() {
+<span class="nc" id="L25">		return Editor;</span>
+	}
+	public void setEditor(String editor) {
+<span class="nc" id="L28">		Editor = editor;</span>
+<span class="nc" id="L29">	}</span>
+	@Override
+	public int hashCode() {
+<span class="fc" id="L32">		final int prime = 31;</span>
+<span class="fc" id="L33">		int result = 1;</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">		result = prime * result + ((Change == null) ? 0 : Change.hashCode());</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">		result = prime * result + ((Editor == null) ? 0 : Editor.hashCode());</span>
+<span class="fc" id="L36">		return result;</span>
+	}
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L41">			return true;</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">		if (obj == null)</span>
+<span class="fc" id="L43">			return false;</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		if (getClass() != obj.getClass())</span>
+<span class="fc" id="L45">			return false;</span>
+<span class="fc" id="L46">		Edit other = (Edit) obj;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">		if (Change == null) {</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">			if (other.Change != null)</span>
+<span class="fc" id="L49">				return false;</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">		} else if (!Change.equals(other.Change))</span>
+<span class="fc" id="L51">			return false;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">		if (Editor == null) {</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">			if (other.Editor != null)</span>
+<span class="fc" id="L54">				return false;</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">		} else if (!Editor.equals(other.Editor))</span>
+<span class="fc" id="L56">			return false;</span>
+<span class="fc" id="L57">		return true;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

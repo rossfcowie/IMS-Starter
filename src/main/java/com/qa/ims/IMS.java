@@ -48,9 +48,11 @@ public class IMS {
 		this.users = new UserController(userDAO,utils);
 	}
 
+
 	public void imsSystem() {
 		LOGGER.info("Welcome to the Inventory Management System!");
 		DBUtils.connect();
+		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
 		do {
 			LOGGER.info("Please enter your username.");
 			String username = utils.getString();
@@ -97,8 +99,8 @@ public class IMS {
 
 			LOGGER.info(() -> "What would you like to do with " + domain.name().toLowerCase() + ":");
 
-			Action.printActions();
-			Action action = Action.getAction(utils);
+			Action.printActions(userLogin.getPermission(),domain);
+			Action action = Action.getAction(utils,userLogin.getPermission(),domain);
 
 			if (action == Action.RETURN) {
 				changeDomain = true;

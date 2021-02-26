@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ims</a> &gt; <a href="index.source.html" class="el_package">com.qa.ims.controller</a> &gt; <span class="el_source">OrderController.java</span></div><h1>OrderController.java</h1><pre class="source lang-java linenums">package com.qa.ims.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.qa.ims.IMS;
+import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.ItemDAO;
+import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.dao.OrderEditsDAO;
+import com.qa.ims.persistence.domain.Order;
+import com.qa.ims.persistence.domain.OrderEdit;
+import com.qa.ims.utils.Utils;
+
+public class OrderController implements CrudController&lt;Order,OrderEdit&gt; {
+	
+<span class="fc" id="L20">	public static final Logger LOGGER = LogManager.getLogger();</span>
+
+	private OrderDAO orderDAO;
+	private OrderEditsDAO orderEDAO;
+	private Utils utils;
+<span class="fc" id="L25">	private CustomerDAO customerDAO = new CustomerDAO();</span>
+	
+	public OrderController(OrderDAO orderDAO, Utils utils,OrderEditsDAO orderEDAO) {
+<span class="fc" id="L28">		super();</span>
+<span class="fc" id="L29">		this.orderDAO = orderDAO;</span>
+<span class="fc" id="L30">		this.orderEDAO = orderEDAO;</span>
+<span class="fc" id="L31">		this.utils = utils;</span>
+<span class="fc" id="L32">	}</span>
+	
+	@Override
+	public List&lt;Order&gt; readAll() {
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==1) {</span>
+<span class="nc" id="L37">			List&lt;Order&gt; orders = orderDAO.readAsCustomer();</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">			for (Order order : orders) {</span>
+<span class="nc" id="L39">				LOGGER.info(order + &quot;\nYour total cost is\n�&quot; + orderDAO.getOrderCost(order.getId()) + &quot;\n&quot;);</span>
+<span class="nc" id="L40">			}</span>
+<span class="nc" id="L41">			return orders;</span>
+		}else {
+<span class="fc" id="L43">			List&lt;Order&gt; orders = orderDAO.readAll();</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">			for (Order order : orders) {</span>
+<span class="fc" id="L45">				LOGGER.info(order + &quot;\nYour total cost is\n�&quot; + orderDAO.getOrderCost(order.getId()) + &quot;\n&quot;);</span>
+<span class="fc" id="L46">			}</span>
+<span class="fc" id="L47">			return orders;</span>
+		}
+		
+	}
+
+	@Override
+	public Order create() {
+<span class="fc" id="L54">		Long customer = 0L;</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+<span class="fc" id="L56">			LOGGER.info(&quot;Please enter the id of the order you would like to update&quot;);</span>
+<span class="fc" id="L57">			customer = utils.getLong();</span>
+			
+		}else {
+<span class="nc" id="L60">			customer = customerDAO.readFromUser(IMS.userLogin.getId()).getId();</span>
+		}
+<span class="fc" id="L62">		Order order = orderDAO.create(new Order(customer));</span>
+<span class="fc" id="L63">		LOGGER.info(&quot;Order created&quot;);</span>
+<span class="fc" id="L64">		return orderEDAO.recordCreate(order);</span>
+	}
+
+	@Override
+	public Order update() {
+<span class="fc" id="L69">		Long orderID =0L;</span>
+<span class="fc" id="L70">		LOGGER.info(&quot;Modify which order?&quot;);</span>
+<span class="fc" id="L71">		orderID = utils.getLong();</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+		
+		}else {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
+<span class="nc" id="L76">				LOGGER.info(&quot;Modify which order? (0 to exit)&quot;);</span>
+<span class="nc" id="L77">				orderID = utils.getLong();</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">				if(orderID ==0) {</span>
+<span class="nc" id="L79">					return null;</span>
+				}
+			}
+		}
+<span class="fc" id="L83">		Order order = null;</span>
+<span class="fc" id="L84">		LOGGER.info(&quot;Would you like to add or remove items?&quot;);</span>
+<span class="fc" id="L85">		String choice = utils.getString();</span>
+<span class="fc" id="L86">		List&lt;Long&gt; itemID =new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">		if(choice.toLowerCase().startsWith(&quot;a&quot;)) {</span>
+<span class="fc" id="L88">			LOGGER.info(&quot;What Item would you like to add?&quot;);</span>
+<span class="fc" id="L89">			 itemID.add(utils.getLong());</span>
+<span class="fc" id="L90">				order = orderEDAO.recordAdd(orderDAO.update(new Order(orderID,itemID)));</span>
+
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">		}else if(choice.toLowerCase().startsWith(&quot;r&quot;)) {</span>
+<span class="fc" id="L93">			LOGGER.info(&quot;What Item would you like to remove?&quot;);</span>
+<span class="fc" id="L94">			itemID.add(utils.getLong());</span>
+<span class="fc" id="L95">			order = orderEDAO.recordRemove(orderDAO.update(orderID,itemID));</span>
+		}else {
+<span class="nc" id="L97">			LOGGER.info(&quot;Please select either add or remove?&quot;);</span>
+<span class="nc" id="L98">			return null;</span>
+		}
+<span class="fc" id="L100">		return order;</span>
+	}
+
+	@Override
+	public int delete() {
+<span class="fc" id="L105">		Long orderID =0L;</span>
+<span class="fc" id="L106">		LOGGER.info(&quot;Delete which order?&quot;);</span>
+<span class="fc" id="L107">		orderID = utils.getLong();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+		
+		}else {
+<span class="nc bnc" id="L111" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
+<span class="nc" id="L112">				LOGGER.info(&quot;Delete which order? (0 to exit)&quot;);</span>
+<span class="nc" id="L113">				orderID = utils.getLong();</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">				if(orderID ==0) {</span>
+<span class="nc" id="L115">					return 0;</span>
+				}
+			}
+		}
+		
+<span class="fc" id="L120">		return orderEDAO.recordDelete(Long.valueOf(orderDAO.delete(orderID)));</span>
+	}
+	public Double cost() {
+<span class="nc" id="L123">		Long orderID =0L;</span>
+<span class="nc" id="L124">		LOGGER.info(&quot;Calculate cost for which order?&quot;);</span>
+<span class="nc" id="L125">		orderID = utils.getLong();</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+		
+		}else {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
+<span class="nc" id="L130">				LOGGER.info(&quot;Calculate cost for which order? (0 to exit)&quot;);</span>
+<span class="nc" id="L131">				orderID = utils.getLong();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">				if(orderID ==0) {</span>
+<span class="nc" id="L133">					return 0D;</span>
+				}
+			}
+		}
+		
+<span class="nc" id="L138">		return orderDAO.getOrderCost(orderID);</span>
+	}
+	@Override
+	public List&lt;OrderEdit&gt; readEdits() {
+<span class="nc" id="L142">		List&lt;OrderEdit&gt; changes = orderEDAO.readAll();</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">		for (OrderEdit change : changes) {</span>
+<span class="nc" id="L144">			LOGGER.info(change);</span>
+<span class="nc" id="L145">		}</span>
+<span class="nc" id="L146">		return changes;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
