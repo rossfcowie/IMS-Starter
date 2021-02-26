@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.IMS;
 import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.ItemDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.dao.OrderEditsDAO;
 import com.qa.ims.persistence.domain.Order;
@@ -16,132 +17,133 @@ import com.qa.ims.utils.Utils;
 
 public class OrderController implements CrudController&lt;Order,OrderEdit&gt; {
 	
-<span class="fc" id="L19">	public static final Logger LOGGER = LogManager.getLogger();</span>
+<span class="fc" id="L20">	public static final Logger LOGGER = LogManager.getLogger();</span>
 
 	private OrderDAO orderDAO;
 	private OrderEditsDAO orderEDAO;
 	private Utils utils;
-<span class="fc" id="L24">	private CustomerDAO customerDAO = new CustomerDAO();</span>
+<span class="fc" id="L25">	private CustomerDAO customerDAO = new CustomerDAO();</span>
 	
 	public OrderController(OrderDAO orderDAO, Utils utils,OrderEditsDAO orderEDAO) {
-<span class="fc" id="L27">		super();</span>
-<span class="fc" id="L28">		this.orderDAO = orderDAO;</span>
-<span class="fc" id="L29">		this.orderEDAO = orderEDAO;</span>
-<span class="fc" id="L30">		this.utils = utils;</span>
-<span class="fc" id="L31">	}</span>
+<span class="fc" id="L28">		super();</span>
+<span class="fc" id="L29">		this.orderDAO = orderDAO;</span>
+<span class="fc" id="L30">		this.orderEDAO = orderEDAO;</span>
+<span class="fc" id="L31">		this.utils = utils;</span>
+<span class="fc" id="L32">	}</span>
 	
 	@Override
 	public List&lt;Order&gt; readAll() {
-<span class="pc bpc" id="L35" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==1) {</span>
-<span class="nc" id="L36">			List&lt;Order&gt; orders = orderDAO.readAsCustomer();</span>
-<span class="nc bnc" id="L37" title="All 2 branches missed.">			for (Order order : orders) {</span>
-<span class="nc" id="L38">				LOGGER.info(order + &quot;\nYour total cost is\n�&quot; + orderDAO.getOrderCost(order.getId()) + &quot;\n&quot;);</span>
-<span class="nc" id="L39">			}</span>
-<span class="nc" id="L40">			return orders;</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==1) {</span>
+<span class="nc" id="L37">			List&lt;Order&gt; orders = orderDAO.readAsCustomer();</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">			for (Order order : orders) {</span>
+<span class="nc" id="L39">				LOGGER.info(order + &quot;\nYour total cost is\n�&quot; + orderDAO.getOrderCost(order.getId()) + &quot;\n&quot;);</span>
+<span class="nc" id="L40">			}</span>
+<span class="nc" id="L41">			return orders;</span>
 		}else {
-<span class="fc" id="L42">			List&lt;Order&gt; orders = orderDAO.readAll();</span>
-<span class="fc bfc" id="L43" title="All 2 branches covered.">			for (Order order : orders) {</span>
-<span class="fc" id="L44">				LOGGER.info(order + &quot;\nYour total cost is\n�&quot; + orderDAO.getOrderCost(order.getId()) + &quot;\n&quot;);</span>
-<span class="fc" id="L45">			}</span>
-<span class="fc" id="L46">			return orders;</span>
+<span class="fc" id="L43">			List&lt;Order&gt; orders = orderDAO.readAll();</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">			for (Order order : orders) {</span>
+<span class="fc" id="L45">				LOGGER.info(order + &quot;\nYour total cost is\n�&quot; + orderDAO.getOrderCost(order.getId()) + &quot;\n&quot;);</span>
+<span class="fc" id="L46">			}</span>
+<span class="fc" id="L47">			return orders;</span>
 		}
 		
 	}
 
 	@Override
 	public Order create() {
-<span class="fc" id="L53">		Long customer = 0L;</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
-<span class="fc" id="L55">			LOGGER.info(&quot;Please enter the id of the order you would like to update&quot;);</span>
-<span class="fc" id="L56">			customer = utils.getLong();</span>
+<span class="fc" id="L54">		Long customer = 0L;</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+<span class="fc" id="L56">			LOGGER.info(&quot;Please enter the id of the order you would like to update&quot;);</span>
+<span class="fc" id="L57">			customer = utils.getLong();</span>
 			
 		}else {
-<span class="nc" id="L59">			customer = customerDAO.readFromUser(IMS.userLogin.getId()).getId();</span>
+<span class="nc" id="L60">			customer = customerDAO.readFromUser(IMS.userLogin.getId()).getId();</span>
 		}
-<span class="fc" id="L61">		Order order = orderDAO.create(new Order(customer));</span>
-<span class="fc" id="L62">		LOGGER.info(&quot;Order created&quot;);</span>
-<span class="fc" id="L63">		return orderEDAO.recordCreate(order);</span>
+<span class="fc" id="L62">		Order order = orderDAO.create(new Order(customer));</span>
+<span class="fc" id="L63">		LOGGER.info(&quot;Order created&quot;);</span>
+<span class="fc" id="L64">		return orderEDAO.recordCreate(order);</span>
 	}
 
 	@Override
 	public Order update() {
-<span class="fc" id="L68">		Long orderID =0L;</span>
-<span class="fc" id="L69">		LOGGER.info(&quot;Modify which order?&quot;);</span>
-<span class="fc" id="L70">		orderID = utils.getLong();</span>
-<span class="pc bpc" id="L71" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+<span class="fc" id="L69">		Long orderID =0L;</span>
+<span class="fc" id="L70">		LOGGER.info(&quot;Modify which order?&quot;);</span>
+<span class="fc" id="L71">		orderID = utils.getLong();</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
 		
 		}else {
-<span class="nc bnc" id="L74" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
-<span class="nc" id="L75">				LOGGER.info(&quot;Modify which order? (0 to exit)&quot;);</span>
-<span class="nc" id="L76">				orderID = utils.getLong();</span>
-<span class="nc bnc" id="L77" title="All 2 branches missed.">				if(orderID ==0) {</span>
-<span class="nc" id="L78">					return null;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
+<span class="nc" id="L76">				LOGGER.info(&quot;Modify which order? (0 to exit)&quot;);</span>
+<span class="nc" id="L77">				orderID = utils.getLong();</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">				if(orderID ==0) {</span>
+<span class="nc" id="L79">					return null;</span>
 				}
 			}
 		}
-		Order order;
-<span class="fc" id="L83">		LOGGER.info(&quot;Would you like to add or remove items?&quot;);</span>
-<span class="fc" id="L84">		String choice = utils.getString();</span>
-<span class="fc" id="L85">		List&lt;Long&gt; itemID =new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L86" title="All 2 branches covered.">		if(choice.toLowerCase().startsWith(&quot;a&quot;)) {</span>
-<span class="fc" id="L87">			LOGGER.info(&quot;What Item would you like to add?&quot;);</span>
-<span class="fc" id="L88">			 itemID.add(utils.getLong());</span>
-<span class="fc" id="L89">				order = orderEDAO.recordAdd(orderDAO.update(new Order(orderID,itemID)));</span>
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">		}else if(choice.toLowerCase().startsWith(&quot;r&quot;)) {</span>
-<span class="fc" id="L91">			LOGGER.info(&quot;What Item would you like to remove?&quot;);</span>
-<span class="fc" id="L92">			itemID.add(utils.getLong());</span>
-<span class="fc" id="L93">			order = orderEDAO.recordRemove(orderDAO.update(orderID,itemID));</span>
+<span class="fc" id="L83">		Order order = null;</span>
+<span class="fc" id="L84">		LOGGER.info(&quot;Would you like to add or remove items?&quot;);</span>
+<span class="fc" id="L85">		String choice = utils.getString();</span>
+<span class="fc" id="L86">		List&lt;Long&gt; itemID =new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">		if(choice.toLowerCase().startsWith(&quot;a&quot;)) {</span>
+<span class="fc" id="L88">			LOGGER.info(&quot;What Item would you like to add?&quot;);</span>
+<span class="fc" id="L89">			 itemID.add(utils.getLong());</span>
+<span class="fc" id="L90">				order = orderEDAO.recordAdd(orderDAO.update(new Order(orderID,itemID)));</span>
+
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">		}else if(choice.toLowerCase().startsWith(&quot;r&quot;)) {</span>
+<span class="fc" id="L93">			LOGGER.info(&quot;What Item would you like to remove?&quot;);</span>
+<span class="fc" id="L94">			itemID.add(utils.getLong());</span>
+<span class="fc" id="L95">			order = orderEDAO.recordRemove(orderDAO.update(orderID,itemID));</span>
 		}else {
-<span class="nc" id="L95">			LOGGER.info(&quot;Please select either add or remove?&quot;);</span>
-<span class="nc" id="L96">			return null;</span>
+<span class="nc" id="L97">			LOGGER.info(&quot;Please select either add or remove?&quot;);</span>
+<span class="nc" id="L98">			return null;</span>
 		}
-<span class="fc" id="L98">		return order;</span>
+<span class="fc" id="L100">		return order;</span>
 	}
 
 	@Override
 	public int delete() {
-<span class="fc" id="L103">		Long orderID =0L;</span>
-<span class="fc" id="L104">		LOGGER.info(&quot;Delete which order?&quot;);</span>
-<span class="fc" id="L105">		orderID = utils.getLong();</span>
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+<span class="fc" id="L105">		Long orderID =0L;</span>
+<span class="fc" id="L106">		LOGGER.info(&quot;Delete which order?&quot;);</span>
+<span class="fc" id="L107">		orderID = utils.getLong();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
 		
 		}else {
-<span class="nc bnc" id="L109" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
-<span class="nc" id="L110">				LOGGER.info(&quot;Delete which order? (0 to exit)&quot;);</span>
-<span class="nc" id="L111">				orderID = utils.getLong();</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">				if(orderID ==0) {</span>
-<span class="nc" id="L113">					return 0;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
+<span class="nc" id="L112">				LOGGER.info(&quot;Delete which order? (0 to exit)&quot;);</span>
+<span class="nc" id="L113">				orderID = utils.getLong();</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">				if(orderID ==0) {</span>
+<span class="nc" id="L115">					return 0;</span>
 				}
 			}
 		}
 		
-<span class="fc" id="L118">		return orderEDAO.recordDelete(Long.valueOf(orderDAO.delete(orderID)));</span>
+<span class="fc" id="L120">		return orderEDAO.recordDelete(Long.valueOf(orderDAO.delete(orderID)));</span>
 	}
 	public Double cost() {
-<span class="nc" id="L121">		Long orderID =0L;</span>
-<span class="nc" id="L122">		LOGGER.info(&quot;Calculate cost for which order?&quot;);</span>
-<span class="nc" id="L123">		orderID = utils.getLong();</span>
-<span class="nc bnc" id="L124" title="All 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
+<span class="nc" id="L123">		Long orderID =0L;</span>
+<span class="nc" id="L124">		LOGGER.info(&quot;Calculate cost for which order?&quot;);</span>
+<span class="nc" id="L125">		orderID = utils.getLong();</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">		if(IMS.userLogin.getPermission()==4) {</span>
 		
 		}else {
-<span class="nc bnc" id="L127" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
-<span class="nc" id="L128">				LOGGER.info(&quot;Calculate cost for which order? (0 to exit)&quot;);</span>
-<span class="nc" id="L129">				orderID = utils.getLong();</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">				if(orderID ==0) {</span>
-<span class="nc" id="L131">					return 0D;</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">			while(!orderDAO.checkAcceptableID(orderID)) {</span>
+<span class="nc" id="L130">				LOGGER.info(&quot;Calculate cost for which order? (0 to exit)&quot;);</span>
+<span class="nc" id="L131">				orderID = utils.getLong();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">				if(orderID ==0) {</span>
+<span class="nc" id="L133">					return 0D;</span>
 				}
 			}
 		}
 		
-<span class="nc" id="L136">		return orderDAO.getOrderCost(orderID);</span>
+<span class="nc" id="L138">		return orderDAO.getOrderCost(orderID);</span>
 	}
 	@Override
 	public List&lt;OrderEdit&gt; readEdits() {
-<span class="nc" id="L140">		List&lt;OrderEdit&gt; changes = orderEDAO.readAll();</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">		for (OrderEdit change : changes) {</span>
-<span class="nc" id="L142">			LOGGER.info(change);</span>
-<span class="nc" id="L143">		}</span>
-<span class="nc" id="L144">		return changes;</span>
+<span class="nc" id="L142">		List&lt;OrderEdit&gt; changes = orderEDAO.readAll();</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">		for (OrderEdit change : changes) {</span>
+<span class="nc" id="L144">			LOGGER.info(change);</span>
+<span class="nc" id="L145">		}</span>
+<span class="nc" id="L146">		return changes;</span>
 	}
 
 }

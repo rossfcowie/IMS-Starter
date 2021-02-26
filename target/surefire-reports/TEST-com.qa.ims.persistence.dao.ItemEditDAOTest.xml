@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="8" failures="0" name="com.qa.ims.persistence.dao.ItemEditDAOTest" time="0.409" errors="0" skipped="0">
+<testsuite tests="8" failures="0" name="com.qa.ims.persistence.dao.ItemEditDAOTest" time="0.391" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="14.0.2+12-46"/>
@@ -60,12 +60,12 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordDelete" time="0.057"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testRecordCreate" time="0.067"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordUpdate" time="0.067"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testReadAllBadSQL" time="0.044"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testReadAll" time="0.056"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordUpdateBadSQL" time="0.045"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testRecordCreateBadSQL" time="0.03"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordDeleteBadSQL" time="0.043"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordDelete" time="0.058"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testRecordCreate" time="0.059"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordUpdate" time="0.066"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testReadAllBadSQL" time="0.048"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testReadAll" time="0.045"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordUpdateBadSQL" time="0.044"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testRecordCreateBadSQL" time="0.032"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemEditDAOTest" name="testrecordDeleteBadSQL" time="0.039"/>
 </testsuite>

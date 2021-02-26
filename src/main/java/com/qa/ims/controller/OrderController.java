@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.IMS;
 import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.ItemDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.dao.OrderEditsDAO;
 import com.qa.ims.persistence.domain.Order;
@@ -79,7 +80,7 @@ public class OrderController implements CrudController<Order,OrderEdit> {
 				}
 			}
 		}
-		Order order;
+		Order order = null;
 		LOGGER.info("Would you like to add or remove items?");
 		String choice = utils.getString();
 		List<Long> itemID =new ArrayList<>();
@@ -87,6 +88,7 @@ public class OrderController implements CrudController<Order,OrderEdit> {
 			LOGGER.info("What Item would you like to add?");
 			 itemID.add(utils.getLong());
 				order = orderEDAO.recordAdd(orderDAO.update(new Order(orderID,itemID)));
+
 		}else if(choice.toLowerCase().startsWith("r")) {
 			LOGGER.info("What Item would you like to remove?");
 			itemID.add(utils.getLong());

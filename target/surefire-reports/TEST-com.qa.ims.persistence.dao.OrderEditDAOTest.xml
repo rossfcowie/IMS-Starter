@@ -60,14 +60,14 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordDelete" time="0.065"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordCreate" time="0.059"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordRemove" time="0.051"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testReadAllBadSQL" time="0.035"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordAddBadSQL" time="0.034"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testReadAll" time="0.063"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordCreateBadSQL" time="0.063"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordRemoveBadSQL" time="0.038"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordDeleteBadSQL" time="0.04"/>
-  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordAdd" time="0.047"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordDelete" time="0.052"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordCreate" time="0.053"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordRemove" time="0.053"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testReadAllBadSQL" time="0.05"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordAddBadSQL" time="0.045"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testReadAll" time="0.055"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordCreateBadSQL" time="0.048"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordRemoveBadSQL" time="0.039"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testrecordDeleteBadSQL" time="0.045"/>
+  <testcase classname="com.qa.ims.persistence.dao.OrderEditDAOTest" name="testRecordAdd" time="0.055"/>
 </testsuite>

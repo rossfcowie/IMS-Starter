@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.qa.ims.IMS;
 import com.qa.ims.controller.UserController;
 import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.persistence.domain.User;
@@ -31,6 +33,10 @@ public class UserControllerTest {
 	@InjectMocks
 	private UserController controller;
 	
+	@Before
+	public void setup() {
+		IMS.userLogin = new User(1L,"admin","admin",4L);
+	}
 	
 	@Test
 	public void testCreate() {

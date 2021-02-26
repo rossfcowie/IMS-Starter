@@ -52,6 +52,7 @@ public class IMS {
 	public void imsSystem() {
 		LOGGER.info("Welcome to the Inventory Management System!");
 		DBUtils.connect();
+		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
 		do {
 			LOGGER.info("Please enter your username.");
 			String username = utils.getString();

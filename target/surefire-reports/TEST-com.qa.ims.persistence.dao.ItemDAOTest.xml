@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="12" failures="0" name="com.qa.ims.persistence.dao.ItemDAOTest" time="0.329" errors="0" skipped="0">
+<testsuite tests="12" failures="0" name="com.qa.ims.persistence.dao.ItemDAOTest" time="0.289" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="14.0.2+12-46"/>
@@ -61,15 +61,15 @@
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
   <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadBadSQL" time="0.029"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadLatest" time="0.028"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testRead" time="0.036"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadAllBadSQL" time="0.024"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testUpdateBadSQL" time="0.023"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testDeleteBadSQL" time="0.036"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadAll" time="0.031"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadLatest" time="0.024"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testRead" time="0.031"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadAllBadSQL" time="0.021"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testUpdateBadSQL" time="0.017"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testDeleteBadSQL" time="0.024"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadAll" time="0.025"/>
   <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testCreate" time="0.03"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testDelete" time="0.026"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadLatestBadSQL" time="0.025"/>
-  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testUpdate" time="0.026"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testDelete" time="0.023"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testReadLatestBadSQL" time="0.02"/>
+  <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testUpdate" time="0.03"/>
   <testcase classname="com.qa.ims.persistence.dao.ItemDAOTest" name="testCreateBadSQL" time="0.015"/>
 </testsuite>
