@@ -1,4 +1,4 @@
-Coverage: 34%
+Coverage: 80%
 # IMS
 
 The inventory management system is designed to allow a company in control of a warehouse of goods to manage what items are sold and their value, as well as allowing customers to create orders for items using their own user accounts.  Additinally changes made to the system can be tracked to a specific user so management can trace any issues that occur.
