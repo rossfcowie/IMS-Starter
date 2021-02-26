@@ -45,4 +45,3 @@ Create table if not exists `ims`.`CustomerEdits`(
 `CustomerID` INT(11) not null,
 `ChangeType` char(6) default null
 );
-Insert into `Users`(`id`,`Username`,`Password`,`permissions`) values (1,"admin","admin",4);
