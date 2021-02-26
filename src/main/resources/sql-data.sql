@@ -1,2 +1,1 @@
-INSERT INTO `ims`.`customers` (`first_name`, `surname`,`UserID`) VALUES ('jordan', 'harrison',1);
-INSERT INTO `ims`.`items` (`name`, `value`) VALUES ('Carrot', 1.25);
+Insert into `Users`(`id`,`Username`,`Password`,`permissions`) values (1,"admin","admin",4);
